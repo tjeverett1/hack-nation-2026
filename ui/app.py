@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import pydeck as pdk
+import plotly.graph_objects as go
 import streamlit as st
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -274,6 +274,50 @@ def _haversine_km(lat1, lon1, lat2, lon2):
     dlon = lon2 - lon1
     a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2.0) ** 2
     return 2 * r * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+
+
+def render_executive_map_plotly_with_placeholder_box(
+    base_plot: pd.DataFrame,
+    mid_lat: float,
+    mid_lon: float,
+) -> None:
+    """Plotly Mapbox + OSM tiles (reliable in Streamlit); red filled box = placeholder desert region."""
+    dlat, dlon = 1.2, 1.2
+    box_lon = [mid_lon - dlon, mid_lon + dlon, mid_lon + dlon, mid_lon - dlon, mid_lon - dlon]
+    box_lat = [mid_lat - dlat, mid_lat - dlat, mid_lat + dlat, mid_lat + dlat, mid_lat - dlat]
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scattermapbox(
+            mode="lines",
+            lon=box_lon,
+            lat=box_lat,
+            fill="toself",
+            fillcolor="rgba(255, 55, 55, 0.32)",
+            line=dict(color="darkred", width=2),
+            name="placeholder",
+            hovertemplate="Desert overlay (placeholder)<extra></extra>",
+        )
+    )
+    fig.add_trace(
+        go.Scattermapbox(
+            mode="markers",
+            lon=base_plot["lon"],
+            lat=base_plot["lat"],
+            marker=dict(size=7, color="rgb(22, 105, 170)"),
+            text=base_plot["tip"],
+            hovertemplate="%{text}<extra></extra>",
+        )
+    )
+    fig.update_layout(
+        mapbox_style="open-street-map",
+        mapbox_zoom=4.2,
+        mapbox_center=dict(lat=mid_lat, lon=mid_lon),
+        margin=dict(l=0, r=0, t=0, b=0),
+        height=520,
+        showlegend=False,
+    )
+    st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True, "displaylogo": False})
 
 
 def compute_desert_overlay_points(
@@ -627,66 +671,23 @@ def render_dmaic(dmaic: dict, df: pd.DataFrame, incidents_df: pd.DataFrame):
                 )
 
             if show_desert_overlay:
-                desert = compute_desert_overlay_points(
-                    df,
-                    str(desert_anchor_type),
-                    golden_hour_radius_km=float(desert_gh_km),
-                    min_trust=float(desert_min_trust),
-                    sample_n=500,
-                )
-                layers: list[pdk.Layer] = []
-                if not desert.empty:
-                    dplot = desert.copy()
-                    dplot["radius_px"] = (8000 + 32000 * dplot["desert_strength"].clip(0, 1)).astype(int)
-                    dplot["tip"] = dplot["desert_strength"].apply(lambda s: f"Desert signal (0–1): {float(s):.2f}")
-                    layers.append(
-                        pdk.Layer(
-                            "ScatterplotLayer",
-                            data=dplot,
-                            get_position="[lon, lat]",
-                            get_fill_color="[255, 110, 70, 150]",
-                            get_radius="radius_px",
-                            pickable=True,
-                        )
-                    )
+                mid_lat = float(base["lat"].median())
+                mid_lon = float(base["lon"].median())
                 base_plot = base.copy()
                 base_plot["trust_score"] = pd.to_numeric(base_plot.get("trust_score"), errors="coerce")
                 base_plot["tip"] = base_plot.apply(
                     lambda r: f"{str(r.get('facility_name', ''))[:48]} — trust {r.get('trust_score', '')}",
                     axis=1,
                 )
-                layers.append(
-                    pdk.Layer(
-                        "ScatterplotLayer",
-                        data=base_plot,
-                        get_position="[lon, lat]",
-                        get_fill_color="[35, 120, 175, 210]",
-                        get_radius=3800,
-                        pickable=True,
-                    )
-                )
                 try:
-                    st.pydeck_chart(
-                        pdk.Deck(
-                            initial_view_state=pdk.ViewState(
-                                lat=float(base["lat"].median()),
-                                lon=float(base["lon"].median()),
-                                zoom=4.0,
-                                pitch=0,
-                            ),
-                            layers=layers,
-                            tooltip={"html": "<b>{tip}</b>"},
-                        ),
-                        use_container_width=True,
-                    )
-                except Exception:
+                    render_executive_map_plotly_with_placeholder_box(base_plot, mid_lat, mid_lon)
+                except Exception as exc:
                     st.map(base[["lat", "lon"]], zoom=4)
-                    st.caption("PyDeck unavailable; showing facilities only.")
-                if desert.empty and show_desert_overlay:
-                    st.caption(
-                        "No desert sample points for this anchor (all sampled locations within radius, or no anchors meet trust threshold). "
-                        "Try another anchor type or lower **Min trust for anchor**."
-                    )
+                    st.caption(f"Plotly map failed ({exc!s}); showing Streamlit map only. Run `pip install -r ui/requirements.txt`.")
+                st.caption(
+                    f"Placeholder desert: **semi-transparent red box** at map center (Plotly + OpenStreetMap). "
+                    f"Next step: drive overlay from anchor **{desert_anchor_type}**, **{desert_gh_km:.0f} km**, trust ≥ **{desert_min_trust}**."
+                )
             else:
                 st.map(base[["lat", "lon"]], zoom=4)
 
