@@ -1,0 +1,22 @@
+
+
+# Standard Python ignores (helpful for the Streamlit app)
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+env/
+.venv/
+.DS_Store
+
+#pdfs
+*.pdf
+
+#data
+*.csv
+*.xlsx
+
+#api
+apis/
+api_keys.py

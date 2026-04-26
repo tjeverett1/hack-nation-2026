@@ -1,0 +1,26 @@
+{
+  "total_incidents": 3000,
+  "open_incidents": 1684,
+  "critical_incidents": 300,
+  "top_incident_types": {
+    "Unexpected Outcome": 530,
+    "Infrastructure Failure": 526,
+    "Equipment Failure": 513,
+    "Insufficient Staff": 492,
+    "Near Miss": 473,
+    "Insufficient Resources": 466
+  },
+  "top_subtypes": {
+    "Network Downtime": 191,
+    "Readmission spike": 187,
+    "Water Supply Failure": 180,
+    "No Resident Specialist": 176,
+    "Ventilator Failure": 175,
+    "Post-op complication": 174,
+    "Imaging Downtime": 173,
+    "Specimen Label Issue": 170,
+    "Unexpected transfer": 169,
+    "Dialysis Unit Down": 165
+  },
+  "facilities_with_open_power_outage": 77
+}

@@ -1,0 +1,49 @@
+{
+  "facility_id": 1024,
+  "facility_name": "Example District Hospital",
+  "city": "Noida",
+  "state": "Uttar Pradesh",
+  "pincode": "201307",
+  "coordinates": {
+    "lat": 28.57222366,
+    "lon": 77.36903381
+  },
+  "trust_score": 84.5,
+  "needs_human_review": false,
+  "anomaly_flags": [
+    "ICU_WITHOUT_SUPPORTING_INFRA"
+  ],
+  "reasoning_trace": "Flagged: ICU claim appears in note, but no explicit ventilator or 24/7 power backup evidence found.",
+  "confirmed_capabilities": [
+    "cataract surgery",
+    "glaucoma management"
+  ],
+  "unverified_claims": [
+    "functional ICU"
+  ],
+  "missing_fields": [
+    "capacity",
+    "24/7 backup power status"
+  ],
+  "staffing_signals": [
+    {
+      "role": "anesthesiologist",
+      "status": "VISITING",
+      "evidence_snippet": "Visiting anesthetist available on request."
+    }
+  ],
+  "urgent_need": true,
+  "one_resource_away": false,
+  "evidence": [
+    {
+      "claim": "functional ICU",
+      "verdict": "PARTIAL",
+      "evidence_snippet": "Description mentions ICU services but does not confirm power backup or ventilators.",
+      "notes": "Require manual follow-up."
+    }
+  ],
+  "ui_actions": {
+    "allow_correction_submit": true,
+    "correction_endpoint_key": "triage_feedback_ingest"
+  }
+}
