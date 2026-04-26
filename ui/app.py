@@ -13,6 +13,28 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 st.set_page_config(page_title="SafeMD.ai", page_icon="🏥", layout="wide")
 
+# Extra horizontal space between tab triggers (Streamlit tabs are tight by default).
+TABS_SPACING_CSS = """
+<style>
+    [data-testid="stTabs"] [data-baseweb="tab-list"] {
+        gap: 2.75rem !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+        row-gap: 0.75rem !important;
+    }
+    [data-testid="stTabs"] [data-baseweb="tab"] {
+        padding-left: 1.35rem !important;
+        padding-right: 1.35rem !important;
+        min-width: 9rem;
+        justify-content: center;
+    }
+</style>
+"""
+
+
+def inject_tab_spacing_css() -> None:
+    st.markdown(TABS_SPACING_CSS, unsafe_allow_html=True)
+
 
 SEVERITY_GUIDANCE = {
     "Unexpected Outcome": {
@@ -297,6 +319,17 @@ def get_facility_text_blob(row: dict) -> str:
     ).lower()
 
 
+def synthetic_trust_history(current: float, facility_id: int, n: int = 14) -> pd.DataFrame:
+    rng = np.random.default_rng((facility_id * 7919 + int(current * 10)) % (2**32))
+    noise = rng.normal(0, 1.8, n)
+    walk = np.clip(np.cumsum(noise) + float(current), 5, 100)
+    walk[-1] = float(current)
+    # Weekly points, oldest → newest; rightmost = today's date (UTC calendar day).
+    end = pd.Timestamp.now(tz=timezone.utc).normalize()
+    dates = [end - pd.Timedelta(weeks=(n - 1 - i)) for i in range(n)]
+    return pd.DataFrame({"date": pd.DatetimeIndex(dates), "trust": walk})
+
+
 @st.cache_data(show_spinner=False)
 def get_dummy_api_ranked_results(selected_facility_type: str, n: int = 200) -> pd.DataFrame:
     # Supported contract formats:
@@ -547,7 +580,115 @@ def render_dmaic(dmaic: dict, df: pd.DataFrame, incidents_df: pd.DataFrame):
         base["lon"] = pd.to_numeric(base["lon"], errors="coerce")
         base = base.dropna(subset=["lat", "lon"])
         if not base.empty:
-            st.map(base[["lat", "lon"]], zoom=4)
+            if "facility_name" in base.columns:
+                base["facility_name"] = base["facility_name"].fillna("").astype(str)
+            else:
+                base["facility_name"] = ""
+            ov_col1, ov_col2, ov_col3 = st.columns([1.15, 1.35, 2.2])
+            with ov_col1:
+                show_desert_overlay = st.checkbox(
+                    "Show desert overlay",
+                    value=False,
+                    help="Sampled locations weighted by distance to the nearest high-trust “anchor” facility type (golden-hour style heuristic).",
+                    key="exec_show_desert_overlay",
+                )
+            facility_types_exec = sorted(df["facility_type_id"].dropna().unique().tolist())
+            default_anchor = 0
+            for i, t in enumerate(facility_types_exec):
+                if str(t).lower() in ("hospital", "traumacenter", "trauma_center"):
+                    default_anchor = i
+                    break
+            with ov_col2:
+                desert_anchor_type = st.selectbox(
+                    "Anchor facility type",
+                    facility_types_exec,
+                    index=min(default_anchor, len(facility_types_exec) - 1),
+                    disabled=not show_desert_overlay,
+                    help="Verified anchors = this type with trust ≥ threshold below.",
+                    key="exec_desert_anchor_type",
+                )
+            with ov_col3:
+                desert_gh_km = st.number_input(
+                    "Golden-hour radius (km)",
+                    min_value=20.0,
+                    max_value=250.0,
+                    value=80.0,
+                    step=5.0,
+                    disabled=not show_desert_overlay,
+                    key="exec_desert_gh_km",
+                )
+                desert_min_trust = st.slider(
+                    "Min trust for anchor",
+                    min_value=0,
+                    max_value=100,
+                    value=70,
+                    disabled=not show_desert_overlay,
+                    key="exec_desert_min_trust",
+                )
+
+            if show_desert_overlay:
+                desert = compute_desert_overlay_points(
+                    df,
+                    str(desert_anchor_type),
+                    golden_hour_radius_km=float(desert_gh_km),
+                    min_trust=float(desert_min_trust),
+                    sample_n=500,
+                )
+                layers: list[pdk.Layer] = []
+                if not desert.empty:
+                    dplot = desert.copy()
+                    dplot["radius_px"] = (8000 + 32000 * dplot["desert_strength"].clip(0, 1)).astype(int)
+                    dplot["tip"] = dplot["desert_strength"].apply(lambda s: f"Desert signal (0–1): {float(s):.2f}")
+                    layers.append(
+                        pdk.Layer(
+                            "ScatterplotLayer",
+                            data=dplot,
+                            get_position="[lon, lat]",
+                            get_fill_color="[255, 110, 70, 150]",
+                            get_radius="radius_px",
+                            pickable=True,
+                        )
+                    )
+                base_plot = base.copy()
+                base_plot["trust_score"] = pd.to_numeric(base_plot.get("trust_score"), errors="coerce")
+                base_plot["tip"] = base_plot.apply(
+                    lambda r: f"{str(r.get('facility_name', ''))[:48]} — trust {r.get('trust_score', '')}",
+                    axis=1,
+                )
+                layers.append(
+                    pdk.Layer(
+                        "ScatterplotLayer",
+                        data=base_plot,
+                        get_position="[lon, lat]",
+                        get_fill_color="[35, 120, 175, 210]",
+                        get_radius=3800,
+                        pickable=True,
+                    )
+                )
+                try:
+                    st.pydeck_chart(
+                        pdk.Deck(
+                            initial_view_state=pdk.ViewState(
+                                lat=float(base["lat"].median()),
+                                lon=float(base["lon"].median()),
+                                zoom=4.0,
+                                pitch=0,
+                            ),
+                            layers=layers,
+                            tooltip={"html": "<b>{tip}</b>"},
+                        ),
+                        use_container_width=True,
+                    )
+                except Exception:
+                    st.map(base[["lat", "lon"]], zoom=4)
+                    st.caption("PyDeck unavailable; showing facilities only.")
+                if desert.empty and show_desert_overlay:
+                    st.caption(
+                        "No desert sample points for this anchor (all sampled locations within radius, or no anchors meet trust threshold). "
+                        "Try another anchor type or lower **Min trust for anchor**."
+                    )
+            else:
+                st.map(base[["lat", "lon"]], zoom=4)
 
     st.subheader("Specialty Gap Matrix + Desert Index")
     if not df.empty:
@@ -570,7 +711,6 @@ def render_dmaic(dmaic: dict, df: pd.DataFrame, incidents_df: pd.DataFrame):
             rules.append("maternal")
         if req_dialysis:
             rules.append("dialysis")
-        # Simple proxy: if no facility text includes required tokens in region -> danger.
         if rules:
             reg_has_rules = {}
             for region, sdf in df.groupby("state", dropna=False):
@@ -600,51 +740,46 @@ def render_facility_detail(filtered_df: pd.DataFrame):
     if filtered_df.empty:
         st.info("No facility selected.")
         return
-    options = (
-        filtered_df["facility_name"].fillna("UNKNOWN")
-        + " | "
-        + filtered_df["city"].fillna("UNKNOWN")
-        + ", "
-        + filtered_df["state"].fillna("UNKNOWN")
-    ).tolist()
     search_term = st.text_input("Search Facility", placeholder="Type facility or city...")
+    match = filtered_df.copy()
     if search_term.strip():
-        search_lower = search_term.lower()
-        options = [o for o in options if search_lower in o.lower()]
-        if not options:
-            st.info("No facilities match search.")
-            return
+        sl = search_term.lower()
+        match = match[
+            match["facility_name"].fillna("UNKNOWN").str.lower().str.contains(sl, na=False)
+            | match["city"].fillna("UNKNOWN").str.lower().str.contains(sl, na=False)
+            | match["state"].fillna("UNKNOWN").str.lower().str.contains(sl, na=False)
+        ]
+    if match.empty:
+        st.info("No facilities match search.")
+        return
+    options = (
+        match["facility_name"].fillna("UNKNOWN")
+        + " | "
+        + match["city"].fillna("UNKNOWN")
+        + ", "
+        + match["state"].fillna("UNKNOWN")
+    ).tolist()
     selected_label = st.selectbox("Select Facility", options)
-    idx = options.index(selected_label)
-    row = filtered_df.iloc[idx].to_dict()
+    row = match.reset_index(drop=True).iloc[options.index(selected_label)].to_dict()
 
-    left, right = st.columns([2, 1])
-    with left:
-        st.markdown(f"### {row.get('facility_name', 'UNKNOWN')}")
-        st.write(f"**Location:** {row.get('city', 'UNKNOWN')}, {row.get('state', 'UNKNOWN')} ({row.get('pincode', 'UNKNOWN')})")
-        trust = float(row.get("trust_score", 0) or 0)
-        trust_color = "#cc0000" if trust < 50 else ("#0057b8" if trust < 75 else "#1f7a1f")
-        st.markdown(
-            f"<div style='font-size: 30px; font-weight: 700; color: {trust_color};'>Trust Score: {trust:.1f}</div>",
-            unsafe_allow_html=True,
-        )
-        st.write(f"**Reasoning Trace:** {row.get('reasoning_trace', '')}")
-        st.markdown("**Confirmed Capabilities**")
-        for x in row.get("confirmed_capabilities", []):
-            st.write(f"- {x}")
-        st.markdown("**Unverified Claims**")
-        for x in row.get("unverified_claims", []):
-            st.write(f"- {x}")
-        st.markdown("**Missing Fields**")
-        for x in row.get("missing_fields", []):
-            st.write(f"- {x}")
-    with right:
-        st.markdown("**Flags**")
-        st.write(f"Urgent Need: {row.get('urgent_need', False)}")
-        st.write(f"One Resource Away: {row.get('one_resource_away', False)}")
-        st.write(f"Needs Review: {row.get('needs_human_review', False)}")
-        for flag in row.get("anomaly_flags", []):
-            st.write(f"- {flag}")
+    st.markdown(f"### {row.get('facility_name', 'UNKNOWN')}")
+    st.write(f"**Location:** {row.get('city', 'UNKNOWN')}, {row.get('state', 'UNKNOWN')} ({row.get('pincode', 'UNKNOWN')})")
+    trust = float(row.get("trust_score", 0) or 0)
+    trust_color = "#cc0000" if trust < 50 else ("#0057b8" if trust < 75 else "#1f7a1f")
+    st.markdown(
+        f"<div style='font-size: 30px; font-weight: 700; color: {trust_color};'>Trust Score: {trust:.1f}</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown("**Trust score history (synthetic trend, weekly)**")
+    hist = synthetic_trust_history(trust, int(row.get("facility_id", 0) or 0))
+    st.line_chart(hist.set_index("date")["trust"], height=180)
+    st.write(f"**Reasoning Trace:** {row.get('reasoning_trace', '')}")
+    st.markdown("**Confirmed Capabilities**")
+    for x in row.get("confirmed_capabilities", []):
+        st.write(f"- {x}")
+    st.markdown("**Unverified Claims**")
+    for x in row.get("unverified_claims", []):
+        st.write(f"- {x}")
 
     st.markdown("#### Evidence Snippets (Source Citation)")
     evidence = row.get("evidence", [])
@@ -661,7 +796,7 @@ def render_facility_detail(filtered_df: pd.DataFrame):
             feedback_path = Path("ui/feedback_submissions.jsonl")
             feedback_path.parent.mkdir(parents=True, exist_ok=True)
             payload = {
-                "timestamp_utc": datetime.utcnow().isoformat(),
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
                 "facility_id": row.get("facility_id"),
                 "facility_name": row.get("facility_name"),
                 "field": corrected_field.strip() or None,
@@ -785,8 +920,6 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
     col4.metric("Global Open Incidents", int((incidents_df["status"] == "open").sum()))
 
     st.markdown("**Overview of Trends + Suggested Actionables**")
-    # Placeholder for future agent-generated analysis:
-    # trends_summary = call_agent_for_incident_summary(subset)
     top_types = subset["incident_type"].value_counts().head(3).to_dict()
     top_subtypes = subset["incident_subtype"].fillna("").replace("", pd.NA).dropna().value_counts().head(3).to_dict()
     placeholder = (
@@ -827,6 +960,7 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
 
 
 def main():
+    inject_tab_spacing_css()
     st.title("Ground Truth Intelligence")
     st.caption("Real-time capability verification, equity mapping, and DMAIC decision support")
 
@@ -862,13 +996,22 @@ def main():
             filtered_df = df.copy()
             if selected_type != "All":
                 filtered_df = filtered_df[filtered_df["facility_type_id"] == selected_type]
+
+            map_zip = st.text_input(
+                "Postal code (ZIP / PIN)",
+                placeholder="e.g. 500013 — leave empty for all in current facility type",
+                key="live_map_pin_filter",
+            )
+            if map_zip.strip():
+                z = map_zip.strip()
+                filtered_df = filtered_df[filtered_df["pincode"].astype(str).str.startswith(z)]
+
             st.write(f"Showing {len(filtered_df):,} of {len(df):,} facilities")
             render_map(filtered_df, incidents_df)
 
             st.markdown("#### Ranked Facilities (Dummy API Output, Top 200)")
             api_df = get_dummy_api_ranked_results(selected_type, n=200)
             if patient_need.strip():
-                # Placeholder for passing user need into API request; currently local post-filter for demo relevance.
                 need = patient_need.lower().strip()
                 narrowed = api_df[
                     api_df["specialty"].astype(str).str.lower().str.contains(need, regex=False)
