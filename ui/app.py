@@ -3,6 +3,7 @@ import random
 from datetime import datetime, timezone
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import pydeck as pdk
 import streamlit as st
@@ -11,6 +12,46 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 st.set_page_config(page_title="SafeMD.ai", page_icon="🏥", layout="wide")
+
+
+SEVERITY_GUIDANCE = {
+    "Unexpected Outcome": {
+        "low": "Minor post-injection bruising; mild nausea from prescribed medication.",
+        "medium": "Allergic rash requiring antihistamines; delayed wound healing requiring extra follow-up.",
+        "high": "Hospital-acquired infection requiring IV antibiotics; minor permanent nerve damage post-surgery.",
+        "critical": "Unexplained maternal mortality; permanent disability due to misdiagnosed stroke.",
+    },
+    "Insufficient Resources": {
+        "low": "Temporary shortage of adhesive bandages; limited generic Paracetamol brand options.",
+        "medium": "Out of stock pediatric antibiotics; lack of sterile dressing kits for wound care.",
+        "high": "Blood bank depleted of O+/A+; lack of dialysis kits for a scheduled patient.",
+        "critical": "Zero oxygen supply in high-acuity ward; no anti-venom in high-risk snakebite zone.",
+    },
+    "Insufficient Staff": {
+        "low": "Delayed discharge due to admin shortage; janitorial delay in non-clinical areas.",
+        "medium": "One nurse managing 20+ low-acuity patients; no lab technician for routine blood work.",
+        "high": "No surgeon for emergency appendectomy; no trained neonatal nurse for premature birth.",
+        "critical": "No MD doctor during night emergency; no anesthesiologist during active C-section.",
+    },
+    "Equipment Failure": {
+        "low": "Dead batteries in digital thermometer; worn velcro on manual BP cuff.",
+        "medium": "ECG malfunction causing 2-hour delay; broken autoclave for non-surgical tools.",
+        "high": "Ventilator malfunction while intubated patient is on support; X-ray burnout in trauma center.",
+        "critical": "Defibrillator failure during cardiac arrest; central oxygen manifold total failure.",
+    },
+    "Infrastructure Failure": {
+        "low": "Single light fixture out in hallway; broken waiting-room seating.",
+        "medium": "Intermittent Wi-Fi blocking real-time records; HVAC failure in admin wing.",
+        "high": "Water contamination in surgical wing; grid failure and generator fails to start.",
+        "critical": "Cold-chain failure destroys vaccines/insulin; structural fire or ward collapse.",
+    },
+    "Near Miss": {
+        "low": "Expired saline found before use; wrong patient name on chart caught early.",
+        "medium": "Mislabeled lab sample caught pre-processing; incorrect dose caught by second nurse.",
+        "high": "Wrong-limb surgery nearly initiated but caught in timeout; near-empty oxygen before transfer.",
+        "critical": "Fire alarm failed during electrical fire (staff caught it); major medication mix-up caught at injection moment.",
+    },
+}
 
 
 def load_data(uploaded_file, fallback_path: Path) -> dict:
@@ -103,6 +144,240 @@ def incident_summary_for_facility(incidents_df: pd.DataFrame, facility_id: int) 
     return sorted(set(subtypes)), len(subset)
 
 
+def _incident_impact_score(subset: pd.DataFrame) -> float:
+    if subset.empty:
+        return 0.0
+    severity_w = {"low": 1.0, "medium": 2.0, "high": 4.0, "critical": 8.0}
+    # Scope gets the highest weight by design.
+    scope_w = {
+        "Single Patient": 1.0,
+        "Single Department": 2.5,
+        "Whole Hospital": 8.0,
+        "Regional Network": 10.0,
+        "Supply Chain": 5.0,
+        "Staff Safety": 4.0,
+    }
+    status_w = {"open": 1.0, "monitoring": 0.6, "resolved": 0.2}
+    sev = subset["severity"].fillna("medium").map(severity_w).fillna(2.0)
+    scp = subset["incident_scope"].fillna("Single Patient").map(scope_w).fillna(1.0)
+    sts = subset["status"].fillna("open").map(status_w).fillna(1.0)
+    return float((sev * scp * sts).sum())
+
+
+def incident_impact_for_facility(incidents_df: pd.DataFrame, facility_id: int) -> tuple[float, bool]:
+    if incidents_df.empty:
+        return 0.0, False
+    subset = incidents_df[incidents_df["facility_id"] == facility_id].copy()
+    score = _incident_impact_score(subset)
+    has_power = subset["incident_subtype"].fillna("").astype(str).str.lower().str.contains("power outage").any()
+    return score, bool(has_power)
+
+
+def severity_weighted_incident_count_for_facility(incidents_df: pd.DataFrame, facility_id: int) -> float:
+    if incidents_df.empty:
+        return 0.0
+    subset = incidents_df[incidents_df["facility_id"] == facility_id]
+    if subset.empty:
+        return 0.0
+    severity_w = {"low": 1.0, "medium": 2.0, "high": 4.0, "critical": 8.0}
+    sev = subset["severity"].fillna("medium").astype(str).str.lower().map(severity_w).fillna(2.0)
+    return float(sev.sum())
+
+
+def _gradient_color_from_value(value: float, min_value: float, max_value: float) -> list[int]:
+    if max_value <= min_value:
+        t = 0.0
+    else:
+        t = (value - min_value) / (max_value - min_value)
+    t = float(np.clip(t, 0.0, 1.0))
+    # Cool-to-hot gradient (blue -> red) while preserving existing dot style.
+    r = int(round(60 + (235 - 60) * t))
+    g = int(round(145 + (35 - 145) * t))
+    b = int(round(220 + (30 - 220) * t))
+    return [r, g, b, 185]
+
+
+def build_incident_gradient_map_df(map_df: pd.DataFrame, incidents_df: pd.DataFrame) -> pd.DataFrame:
+    working = map_df.copy()
+    if working.empty:
+        return working
+    working["incident_weighted_count"] = working["facility_id"].apply(
+        lambda fid: severity_weighted_incident_count_for_facility(incidents_df, int(fid))
+    )
+    min_v = float(working["incident_weighted_count"].min()) if not working.empty else 0.0
+    max_v = float(working["incident_weighted_count"].max()) if not working.empty else 0.0
+    colors = working["incident_weighted_count"].apply(
+        lambda v: _gradient_color_from_value(float(v), min_v, max_v)
+    )
+    working["dot_r"] = colors.apply(lambda c: int(c[0]))
+    working["dot_g"] = colors.apply(lambda c: int(c[1]))
+    working["dot_b"] = colors.apply(lambda c: int(c[2]))
+    working["dot_a"] = colors.apply(lambda c: int(c[3]))
+    working["location_name"] = (
+        working["facility_name"].fillna("Unknown facility").astype(str)
+        + " ("
+        + working["city"].fillna("Unknown city").astype(str)
+        + ", "
+        + working["state"].fillna("Unknown state").astype(str)
+        + ")"
+    )
+    return working
+
+
+def facility_status_for_map(incidents_df: pd.DataFrame, facility_id: int) -> str:
+    if incidents_df.empty:
+        return "NOMINAL"
+    subset = incidents_df[incidents_df["facility_id"] == facility_id]
+    if subset.empty:
+        return "NOMINAL"
+    open_rows = subset[subset["status"] == "open"]
+    if not open_rows.empty:
+        has_critical = (open_rows["severity"].fillna("").str.lower() == "critical").any()
+        has_power = open_rows["incident_subtype"].fillna("").str.lower().str.contains("power outage").any()
+        if has_critical or has_power:
+            return "CRITICAL"
+        return "ACTIVE"
+    if (subset["status"] == "monitoring").any():
+        return "MONITORING"
+    return "NOMINAL"
+
+
+def _haversine_km(lat1, lon1, lat2, lon2):
+    r = 6371.0
+    lat1 = np.radians(lat1)
+    lon1 = np.radians(lon1)
+    lat2 = np.radians(lat2)
+    lon2 = np.radians(lon2)
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2.0) ** 2
+    return 2 * r * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+
+
+def compute_desert_overlay_points(
+    all_df: pd.DataFrame,
+    selected_facility_type: str,
+    golden_hour_radius_km: float = 100.0,
+    min_trust: float = 70.0,
+    sample_n: int = 500,
+) -> pd.DataFrame:
+    if all_df.empty or selected_facility_type == "All":
+        return pd.DataFrame(columns=["lat", "lon", "desert_strength"])
+    base = all_df.copy()
+    coords = pd.json_normalize(base["coordinates"]).rename(columns={"lat": "lat", "lon": "lon"})
+    base = pd.concat([base.reset_index(drop=True), coords], axis=1).dropna(subset=["lat", "lon"])
+    if base.empty:
+        return pd.DataFrame(columns=["lat", "lon", "desert_strength"])
+
+    targets = base[
+        (base["facility_type_id"] == selected_facility_type) & (base["trust_score"].fillna(0) >= min_trust)
+    ][["lat", "lon"]].to_numpy()
+    sampled = base.sample(n=min(sample_n, len(base)), random_state=42)[["lat", "lon"]].copy()
+    if len(targets) == 0:
+        sampled["desert_strength"] = 1.0
+        return sampled
+
+    strengths = []
+    for _, row in sampled.iterrows():
+        dists = _haversine_km(row["lat"], row["lon"], targets[:, 0], targets[:, 1])
+        min_dist = float(np.min(dists))
+        strengths.append(max(0.0, min(1.0, (min_dist - golden_hour_radius_km) / golden_hour_radius_km)))
+    sampled["desert_strength"] = strengths
+    return sampled[sampled["desert_strength"] > 0].copy()
+
+
+def get_facility_text_blob(row: dict) -> str:
+    return " ".join(
+        [
+            " ".join(row.get("confirmed_capabilities", []) or []),
+            " ".join(row.get("unverified_claims", []) or []),
+            str(row.get("reasoning_trace", "")),
+            str(row.get("facility_name", "")),
+        ]
+    ).lower()
+
+
+@st.cache_data(show_spinner=False)
+def get_dummy_api_ranked_results(selected_facility_type: str, n: int = 200) -> pd.DataFrame:
+    # Supported contract formats:
+    # 1) Simple:
+    #    {"results":[{"place_name":"...", "specialty":"...", "score":87.2, "facility_type_id":"clinic"}]}
+    # 2) Future schema:
+    #    {
+    #      "request_id":"...",
+    #      "metadata": {...},
+    #      "ranked_facilities":[
+    #        {"rank":1,"facility":{"name":"...","type":"clinic","specialties":[...]},
+    #         "scores":{"composite_0_100":91.2}, "distance_km":3.4, "incident_open_count":2, "reasons":[...]}
+    #      ]
+    #    }
+    contract_paths = [Path("ui/dummy_api_response_v2.json"), Path("ui/dummy_api_response.json")]
+    payload = None
+    for path in contract_paths:
+        if path.exists():
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            break
+
+    if payload is not None:
+        rows = []
+        if "ranked_facilities" in payload:
+            for r in payload.get("ranked_facilities", []):
+                facility = r.get("facility", {})
+                score_obj = r.get("scores", {})
+                rows.append(
+                    {
+                        "rank": r.get("rank"),
+                        "place_name": facility.get("name"),
+                        "specialty": ", ".join(facility.get("specialties", [])) if isinstance(facility.get("specialties"), list) else facility.get("specialties"),
+                        "score": score_obj.get("score", score_obj.get("composite_0_100")),
+                        "facility_type_id": facility.get("type"),
+                        "distance_km": r.get("distance_km"),
+                        "incident_open_count": r.get("incident_open_count"),
+                        "reasons": "; ".join(r.get("reasons", [])) if isinstance(r.get("reasons"), list) else r.get("reasons"),
+                    }
+                )
+        else:
+            rows = payload.get("results", [])
+
+        df = pd.DataFrame(rows)
+        if not df.empty:
+            if "facility_type_id" in df.columns and selected_facility_type != "All":
+                typed = df[df["facility_type_id"].astype(str) == str(selected_facility_type)].copy()
+                if not typed.empty:
+                    df = typed
+            if "rank" not in df.columns:
+                df = df.reset_index(drop=True)
+                df["rank"] = df.index + 1
+            if "score" not in df.columns and "score_0_100" in df.columns:
+                df["score"] = df["score_0_100"]
+            required_cols = ["rank", "place_name", "specialty", "score"]
+            for col in required_cols:
+                if col not in df.columns:
+                    df[col] = None
+            df = df[required_cols + [c for c in df.columns if c not in required_cols]].copy()
+            df["score"] = pd.to_numeric(df["score"], errors="coerce").fillna(0.0)
+            # API is assumed unordered; rank locally by score.
+            df = df.sort_values("score", ascending=False).reset_index(drop=True)
+            df["rank"] = df.index + 1
+            return df.head(n)
+
+    # Fallback if file is missing/empty.
+    seed = abs(hash(selected_facility_type)) % (2**32)
+    rng = np.random.default_rng(seed)
+    rows = [
+        {
+            "rank": i + 1,
+            "place_name": f"Fallback Facility {selected_facility_type}-{i+1:03d}",
+            "specialty": "General Healthcare",
+            "score": float(np.round(rng.uniform(25, 99), 1)),
+        }
+        for i in range(n)
+    ]
+    df = pd.DataFrame(rows).sort_values("score", ascending=False).reset_index(drop=True)
+    df["rank"] = df.index + 1
+    return df
+
+
 def infer_top_issue_clusters(incidents_df: pd.DataFrame, n_clusters: int = 10) -> pd.DataFrame:
     if incidents_df.empty:
         return pd.DataFrame(columns=["cluster_id", "cluster_label", "count"])
@@ -113,11 +388,22 @@ def infer_top_issue_clusters(incidents_df: pd.DataFrame, n_clusters: int = 10) -
         + " "
         + incidents_df["description"].fillna("").astype(str)
     ).str.lower()
-    if text.str.strip().eq("").all():
+    clean_text = text[text.str.strip() != ""]
+    if clean_text.empty:
         return pd.DataFrame(columns=["cluster_id", "cluster_label", "count"])
-    k = min(n_clusters, max(2, len(text)))
+    # Guard for tiny sample sizes (e.g., 1 incident): k-means requires n_samples >= n_clusters.
+    if len(clean_text) < 2:
+        fallback_label = clean_text.iloc[0][:80] if len(clean_text.iloc[0]) > 0 else "single_issue"
+        return pd.DataFrame(
+            [{"cluster_id": 0, "cluster_label": fallback_label, "count": int(len(clean_text))}]
+        )
+    k = min(n_clusters, len(clean_text))
     vectorizer = TfidfVectorizer(stop_words="english", max_features=800)
-    X = vectorizer.fit_transform(text)
+    X = vectorizer.fit_transform(clean_text)
+    if X.shape[1] == 0:
+        return pd.DataFrame(
+            [{"cluster_id": 0, "cluster_label": "insufficient_text_signal", "count": int(len(clean_text))}]
+        )
     model = KMeans(n_clusters=k, random_state=42, n_init=10)
     labels = model.fit_predict(X)
     terms = vectorizer.get_feature_names_out()
@@ -204,55 +490,10 @@ def dashboard_metrics(df: pd.DataFrame, incidents_df: pd.DataFrame):
     f.metric("Active Incidents", active_incidents)
 
 
-def apply_filters(df: pd.DataFrame, incidents_df: pd.DataFrame) -> pd.DataFrame:
-    st.sidebar.header("Planning Filters")
-    trust_min = st.sidebar.slider("Minimum Verification Confidence", 0, 100, 60)
-    capability_gap_only = st.sidebar.checkbox("Show Capability Gap Risk Only", value=False)
-    one_intervention_only = st.sidebar.checkbox("Show 'One Intervention Away' Facilities", value=False)
-    audit_priority_only = st.sidebar.checkbox("Show Manual Audit Priority", value=False)
-    state_filter = st.sidebar.multiselect(
-        "State/Region",
-        sorted(df["state"].dropna().unique().tolist()) if "state" in df.columns else [],
-    )
-    has_icu_gap = st.sidebar.checkbox("ICU Dependency Gap (no supporting infra evidence)", value=False)
-    has_open_incident = st.sidebar.checkbox("Active Incident Facilities Only", value=False)
-    all_service_types = sorted({s for row in df["healthcare_types"] for s in (row or [])})
-    service_filter = st.sidebar.selectbox("Service Capability Category", ["All"] + all_service_types)
-
-    st.sidebar.caption(
-        "Capability Gap Risk = missing critical fields with reasonable confidence; "
-        "One Intervention Away = likely one missing resource to become functional; "
-        "Manual Audit Priority = validator flagged for human review."
-    )
-
-    filtered = df[df["trust_score"].fillna(0) >= trust_min]
-    if capability_gap_only and "urgent_need" in filtered.columns:
-        filtered = filtered[filtered["urgent_need"] == True]  # noqa: E712
-    if one_intervention_only and "one_resource_away" in filtered.columns:
-        filtered = filtered[filtered["one_resource_away"] == True]  # noqa: E712
-    if audit_priority_only and "needs_human_review" in filtered.columns:
-        filtered = filtered[filtered["needs_human_review"] == True]  # noqa: E712
-    if state_filter and "state" in filtered.columns:
-        filtered = filtered[filtered["state"].isin(state_filter)]
-    if has_icu_gap:
-        filtered = filtered[
-            filtered["anomaly_flags"].apply(
-                lambda x: "ICU_WITHOUT_SUPPORTING_INFRA" in x if isinstance(x, list) else False
-            )
-        ]
-    if has_open_incident and not incidents_df.empty:
-        ids = incidents_df[incidents_df["status"] == "open"]["facility_id"].unique().tolist()
-        filtered = filtered[filtered["facility_id"].isin(ids)]
-    if service_filter != "All":
-        filtered = filtered[
-            filtered["healthcare_types"].apply(
-                lambda x: service_filter in x if isinstance(x, list) else False
-            )
-        ]
-    return filtered
-
-
-def render_map(filtered_df: pd.DataFrame, incidents_df: pd.DataFrame):
+def render_map(
+    filtered_df: pd.DataFrame,
+    incidents_df: pd.DataFrame,
+):
     st.subheader("Live Ground Truth Facility Map")
     map_df = filtered_df.copy()
     if map_df.empty:
@@ -260,49 +501,16 @@ def render_map(filtered_df: pd.DataFrame, incidents_df: pd.DataFrame):
         return
     coords = pd.json_normalize(map_df["coordinates"]).rename(columns={"lat": "lat", "lon": "lon"})
     map_df = pd.concat([map_df.reset_index(drop=True), coords], axis=1)
+    map_df["lat"] = pd.to_numeric(map_df["lat"], errors="coerce")
+    map_df["lon"] = pd.to_numeric(map_df["lon"], errors="coerce")
     map_df = map_df.dropna(subset=["lat", "lon"])
     if map_df.empty:
         st.info("No geocoded coordinates in current selection.")
         return
-    map_df["active_incident_subtypes"], map_df["active_incident_count"] = zip(
-        *map_df["facility_id"].apply(lambda x: incident_summary_for_facility(incidents_df, x))
-    )
-    map_df["has_power_outage"] = map_df["active_incident_subtypes"].apply(
-        lambda x: any("power outage" in str(v).lower() for v in x) if isinstance(x, list) else False
-    )
-    map_df["marker_color"] = map_df.apply(
-        lambda r: [255, 0, 0]
-        if r["has_power_outage"]
-        else ([255, 140, 0] if r["active_incident_count"] > 0 else [0, 160, 80]),
-        axis=1,
-    )
-
-    layer = pdk.Layer(
-        "ScatterplotLayer",
-        data=map_df,
-        get_position="[lon, lat]",
-        # Pixel-based radii prevent oversized circles at high zoom.
-        get_radius=8,
-        radius_units="pixels",
-        radius_min_pixels=2,
-        radius_max_pixels=14,
-        get_fill_color="marker_color",
-        pickable=True,
-    )
-    tooltip = {
-        "html": "<b>{facility_name}</b><br/>Trust: {trust_score}<br/>Open Incidents: {active_incident_count}<br/>Types: {active_incident_subtypes}",
-        "style": {"backgroundColor": "white", "color": "black"},
-    }
-    view_state = pdk.ViewState(
-        latitude=float(map_df["lat"].mean()),
-        longitude=float(map_df["lon"].mean()),
-        zoom=4.5,
-    )
-    st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip=tooltip))
-    st.caption("Marker colors: red = power outage, orange = other open incidents, green = no active incidents")
+    st.map(map_df[["lat", "lon"]], zoom=4)
 
 
-def render_dmaic(dmaic: dict):
+def render_dmaic(dmaic: dict, df: pd.DataFrame, incidents_df: pd.DataFrame):
     st.subheader("Executive Dashboard (DMAIC / A3)")
     if not dmaic:
         st.info("No DMAIC summary loaded.")
@@ -330,6 +538,62 @@ def render_dmaic(dmaic: dict):
         if risks:
             st.dataframe(pd.DataFrame(risks), use_container_width=True)
 
+    st.subheader("Executive Map + Desert Overlay")
+    if not df.empty:
+        base = df.copy()
+        coords = pd.json_normalize(base["coordinates"]).rename(columns={"lat": "lat", "lon": "lon"})
+        base = pd.concat([base.reset_index(drop=True), coords], axis=1)
+        base["lat"] = pd.to_numeric(base["lat"], errors="coerce")
+        base["lon"] = pd.to_numeric(base["lon"], errors="coerce")
+        base = base.dropna(subset=["lat", "lon"])
+        if not base.empty:
+            st.map(base[["lat", "lon"]], zoom=4)
+
+    st.subheader("Specialty Gap Matrix + Desert Index")
+    if not df.empty:
+        population_threshold = st.number_input("Population Threshold (X)", min_value=10000, value=150000, step=10000)
+        req_trauma = st.checkbox("Require functioning Trauma capability", value=True)
+        req_maternal = st.checkbox("Require functioning Maternal capability", value=True)
+        req_dialysis = st.checkbox("Require functioning Dialysis capability", value=False)
+        grouped = df.groupby("state", dropna=False).agg(
+            facilities=("facility_id", "count"),
+            avg_trust=("trust_score", "mean"),
+        ).reset_index().rename(columns={"state": "region"})
+        grouped["estimated_population"] = grouped["facilities"] * 12000
+        grouped["verified_functional_beds_proxy"] = grouped["facilities"] * (grouped["avg_trust"].fillna(0) / 100.0) * 10
+        grouped["desert_index_0_100"] = (100 - (grouped["verified_functional_beds_proxy"] / grouped["estimated_population"] * 1000)).clip(0, 100)
+        grouped["danger_zone"] = grouped["estimated_population"] > population_threshold
+        rules = []
+        if req_trauma:
+            rules.append("trauma")
+        if req_maternal:
+            rules.append("maternal")
+        if req_dialysis:
+            rules.append("dialysis")
+        # Simple proxy: if no facility text includes required tokens in region -> danger.
+        if rules:
+            reg_has_rules = {}
+            for region, sdf in df.groupby("state", dropna=False):
+                blob = " ".join(sdf.apply(lambda r: get_facility_text_blob(r.to_dict()), axis=1).tolist())
+                reg_has_rules[region] = all(rule in blob for rule in rules)
+            grouped["danger_zone"] = grouped["danger_zone"] | ~grouped["region"].map(reg_has_rules).fillna(False)
+        st.dataframe(
+            grouped.sort_values(["danger_zone", "desert_index_0_100"], ascending=[False, False]),
+            use_container_width=True,
+        )
+
+    st.subheader("Acuity Filters (Life-Saving Capability Combinations)")
+    acuity_text = st.text_input("Capability Query", value="ventilator 24/7 electricity")
+    if acuity_text.strip() and not df.empty:
+        terms = acuity_text.lower().split()
+        matched = df[df.apply(lambda r: all(t in get_facility_text_blob(r.to_dict()) for t in terms), axis=1)]
+        st.write(f"Facilities matching acuity query: {len(matched)}")
+        if not matched.empty:
+            st.dataframe(
+                matched[["facility_name", "city", "state", "trust_score"]].sort_values("trust_score", ascending=False).head(30),
+                use_container_width=True,
+            )
+
 
 def render_facility_detail(filtered_df: pd.DataFrame):
     st.subheader("Facility Intelligence + Source Traceability")
@@ -343,6 +607,13 @@ def render_facility_detail(filtered_df: pd.DataFrame):
         + ", "
         + filtered_df["state"].fillna("UNKNOWN")
     ).tolist()
+    search_term = st.text_input("Search Facility", placeholder="Type facility or city...")
+    if search_term.strip():
+        search_lower = search_term.lower()
+        options = [o for o in options if search_lower in o.lower()]
+        if not options:
+            st.info("No facilities match search.")
+            return
     selected_label = st.selectbox("Select Facility", options)
     idx = options.index(selected_label)
     row = filtered_df.iloc[idx].to_dict()
@@ -351,7 +622,12 @@ def render_facility_detail(filtered_df: pd.DataFrame):
     with left:
         st.markdown(f"### {row.get('facility_name', 'UNKNOWN')}")
         st.write(f"**Location:** {row.get('city', 'UNKNOWN')}, {row.get('state', 'UNKNOWN')} ({row.get('pincode', 'UNKNOWN')})")
-        st.write(f"**Trust Score:** {row.get('trust_score', 'N/A')}")
+        trust = float(row.get("trust_score", 0) or 0)
+        trust_color = "#cc0000" if trust < 50 else ("#0057b8" if trust < 75 else "#1f7a1f")
+        st.markdown(
+            f"<div style='font-size: 30px; font-weight: 700; color: {trust_color};'>Trust Score: {trust:.1f}</div>",
+            unsafe_allow_html=True,
+        )
         st.write(f"**Reasoning Trace:** {row.get('reasoning_trace', '')}")
         st.markdown("**Confirmed Capabilities**")
         for x in row.get("confirmed_capabilities", []):
@@ -421,7 +697,23 @@ def render_incident_reporting_tab(df: pd.DataFrame, incidents_path: Path):
         "Incident Subtype (2-3 words)",
         placeholder="e.g. Power outage, Oxygen leak, Staff shortage",
     )
-    severity = st.select_slider("Severity", options=["low", "medium", "high", "critical"], value="medium")
+    recommended = "medium"
+    subtype_hint = incident_subtype.lower()
+    if any(k in subtype_hint for k in ["power outage", "oxygen", "defibrillator", "collapse", "no md", "no anesthesiologist"]):
+        recommended = "critical"
+    elif any(k in subtype_hint for k in ["ventilator", "blood", "no surgeon", "contamination"]):
+        recommended = "high"
+    elif any(k in subtype_hint for k in ["delay", "wifi", "ecg", "sample"]):
+        recommended = "medium"
+    else:
+        recommended = "low"
+    severity = st.select_slider("Severity", options=["low", "medium", "high", "critical"], value=recommended)
+    st.caption(f"Suggested severity: **{recommended.upper()}** based on incident subtype keywords.")
+    guidance = SEVERITY_GUIDANCE.get(incident_type, {})
+    if guidance:
+        with st.expander("Severity Examples for this Incident Type", expanded=False):
+            for level in ["low", "medium", "high", "critical"]:
+                st.write(f"**{level.title()}**: {guidance.get(level, '')}")
     description = st.text_area("Incident Description", height=180)
     status = st.selectbox("Status", ["open", "monitoring", "resolved"], index=0)
 
@@ -471,21 +763,26 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
     facility_options = (
         df["facility_name"].fillna("UNKNOWN") + " | " + df["city"].fillna("UNKNOWN") + ", " + df["state"].fillna("UNKNOWN")
     ).tolist()
-    selected_label = st.selectbox("Choose Hospital", facility_options, key="analysis_facility")
-    idx = facility_options.index(selected_label)
-    facility_id = int(df.iloc[idx]["facility_id"])
-    facility_name = df.iloc[idx]["facility_name"]
+    selected_label = st.selectbox("Choose Hospital", ["All Hospitals"] + facility_options, key="analysis_facility")
 
-    subset = incidents_df[incidents_df["facility_id"] == facility_id].copy()
-    st.markdown(f"### {facility_name}")
-    if subset.empty:
-        st.info("No incidents for this hospital.")
-        return
+    if selected_label == "All Hospitals":
+        subset = incidents_df.copy()
+        st.markdown("### All Hospitals")
+    else:
+        idx = facility_options.index(selected_label)
+        facility_id = int(df.iloc[idx]["facility_id"])
+        facility_name = df.iloc[idx]["facility_name"]
+        subset = incidents_df[incidents_df["facility_id"] == facility_id].copy()
+        st.markdown(f"### {facility_name}")
+        if subset.empty:
+            st.info("No incidents for this hospital.")
+            return
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total Incidents", len(subset))
-    col2.metric("Open Incidents", int((subset["status"] == "open").sum()))
-    col3.metric("Critical Incidents", int((subset["severity"] == "critical").sum()))
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Selected Scope: Total", len(subset))
+    col2.metric("Selected Scope: Open", int((subset["status"] == "open").sum()))
+    col3.metric("Selected Scope: Critical", int((subset["severity"] == "critical").sum()))
+    col4.metric("Global Open Incidents", int((incidents_df["status"] == "open").sum()))
 
     st.markdown("**Overview of Trends + Suggested Actionables**")
     # Placeholder for future agent-generated analysis:
@@ -530,14 +827,10 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
 
 
 def main():
-    st.title("SafeMD.ai - Verified Ground Truth Intelligence")
+    st.title("Ground Truth Intelligence")
     st.caption("Real-time capability verification, equity mapping, and DMAIC decision support")
 
-    uploaded = None
-    with st.expander("Advanced: override local pipeline output"):
-        uploaded = st.file_uploader("Upload pipeline output JSON", type=["json"])
-        st.caption("You can ignore this in normal use. By default, the app reads local `databricks_agent_output.json`.")
-    data = load_data(uploaded, Path("databricks_agent_output.json"))
+    data = load_data(None, Path("databricks_agent_output.json"))
     facility_rows = data.get("facility_results", [])
     dmaic = data.get("dmaic_summary", {})
     equity = data.get("equity_summary", {})
@@ -560,13 +853,37 @@ def main():
 
     with tab_map:
         if not df.empty:
-            filtered_df = apply_filters(df, incidents_df)
-            facility_types = sorted(filtered_df["facility_type_id"].dropna().unique().tolist())
-            selected_type = st.selectbox("Facility Type (facilityTypeId)", ["All"] + facility_types)
+            facility_types = sorted(df["facility_type_id"].dropna().unique().tolist())
+            selected_type = st.selectbox("Facility Type", ["All"] + facility_types)
+            patient_need = st.text_input(
+                "Patient Need",
+                placeholder="e.g. trauma stabilization, dialysis, neonatal emergency",
+            )
+            filtered_df = df.copy()
             if selected_type != "All":
                 filtered_df = filtered_df[filtered_df["facility_type_id"] == selected_type]
             st.write(f"Showing {len(filtered_df):,} of {len(df):,} facilities")
             render_map(filtered_df, incidents_df)
+
+            st.markdown("#### Ranked Facilities (Dummy API Output, Top 200)")
+            api_df = get_dummy_api_ranked_results(selected_type, n=200)
+            if patient_need.strip():
+                # Placeholder for passing user need into API request; currently local post-filter for demo relevance.
+                need = patient_need.lower().strip()
+                narrowed = api_df[
+                    api_df["specialty"].astype(str).str.lower().str.contains(need, regex=False)
+                    | api_df["place_name"].astype(str).str.lower().str.contains(need, regex=False)
+                ]
+                if not narrowed.empty:
+                    api_df = narrowed
+            display_cols = ["rank", "place_name", "specialty", "score"]
+            st.dataframe(
+                api_df[display_cols].sort_values("rank"),
+                use_container_width=True,
+                height=360,
+                hide_index=True,
+            )
+
             render_facility_detail(filtered_df)
         else:
             st.info("No facility data loaded.")
@@ -578,7 +895,7 @@ def main():
         render_incident_analysis_tab(df, incidents_df)
 
     with tab_dashboard:
-        render_dmaic(dmaic)
+        render_dmaic(dmaic, df, incidents_df)
         st.subheader("Equity Summary")
         if equity:
             st.json(equity)

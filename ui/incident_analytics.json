@@ -1,26 +1,26 @@
 {
   "total_incidents": 3000,
-  "open_incidents": 1684,
+  "open_incidents": 1661,
   "critical_incidents": 300,
   "top_incident_types": {
-    "Unexpected Outcome": 530,
-    "Infrastructure Failure": 526,
-    "Equipment Failure": 513,
-    "Insufficient Staff": 492,
-    "Near Miss": 473,
-    "Insufficient Resources": 466
+    "Infrastructure Failure": 512,
+    "Equipment Failure": 509,
+    "Near Miss": 509,
+    "Unexpected Outcome": 504,
+    "Insufficient Resources": 495,
+    "Insufficient Staff": 471
   },
   "top_subtypes": {
-    "Network Downtime": 191,
-    "Readmission spike": 187,
-    "Water Supply Failure": 180,
-    "No Resident Specialist": 176,
-    "Ventilator Failure": 175,
-    "Post-op complication": 174,
-    "Imaging Downtime": 173,
-    "Specimen Label Issue": 170,
-    "Unexpected transfer": 169,
-    "Dialysis Unit Down": 165
+    "Dialysis Unit Down": 181,
+    "Water Supply Failure": 179,
+    "Readmission spike": 178,
+    "Network Downtime": 176,
+    "Specimen Label Issue": 172,
+    "No Anesthesiologist": 172,
+    "Medication Error": 171,
+    "Ventilator Failure": 168,
+    "No Resident Specialist": 167,
+    "Dialysis Consumables Low": 167
   },
-  "facilities_with_open_power_outage": 77
+  "facilities_with_open_power_outage": 75
 }

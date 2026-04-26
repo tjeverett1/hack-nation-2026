@@ -1,0 +1,4611 @@
+{
+  "request_id": "dummy_req_0001",
+  "metadata": {
+    "generated_at_utc": "2026-04-26T05:47:17.607708+00:00",
+    "model_version": "dummy-v2",
+    "top_k": 200,
+    "notes": "Future contract mock for API integration."
+  },
+  "ranked_facilities": [
+    {
+      "rank": 1,
+      "facility": {
+        "id": "fac_0001",
+        "name": "SafeMD Future API Facility 001",
+        "type": "clinic",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 73.1,
+        "trust_0_100": 92.4,
+        "safety_0_100": 83.5
+      },
+      "distance_km": 18.6,
+      "incident_open_count": 0,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 2,
+      "facility": {
+        "id": "fac_0002",
+        "name": "SafeMD Future API Facility 002",
+        "type": "dentist",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 90.3,
+        "trust_0_100": 35.3,
+        "safety_0_100": 86.7
+      },
+      "distance_km": 63.9,
+      "incident_open_count": 3,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 3,
+      "facility": {
+        "id": "fac_0003",
+        "name": "SafeMD Future API Facility 003",
+        "type": "hospital",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 62.3,
+        "trust_0_100": 54.4,
+        "safety_0_100": 49.2
+      },
+      "distance_km": 21.0,
+      "incident_open_count": 11,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 4,
+      "facility": {
+        "id": "fac_0004",
+        "name": "SafeMD Future API Facility 004",
+        "type": "healthCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 64.8,
+        "trust_0_100": 70.4,
+        "safety_0_100": 98.7
+      },
+      "distance_km": 63.6,
+      "incident_open_count": 5,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 5,
+      "facility": {
+        "id": "fac_0005",
+        "name": "SafeMD Future API Facility 005",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 72.9,
+        "trust_0_100": 98.3,
+        "safety_0_100": 44.9
+      },
+      "distance_km": 13.5,
+      "incident_open_count": 10,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 6,
+      "facility": {
+        "id": "fac_0006",
+        "name": "SafeMD Future API Facility 006",
+        "type": "clinic",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 33.0,
+        "trust_0_100": 37.3,
+        "safety_0_100": 65.5
+      },
+      "distance_km": 37.7,
+      "incident_open_count": 7,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 7,
+      "facility": {
+        "id": "fac_0007",
+        "name": "SafeMD Future API Facility 007",
+        "type": "dentist",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 93.3,
+        "trust_0_100": 75.3,
+        "safety_0_100": 65.5
+      },
+      "distance_km": 40.2,
+      "incident_open_count": 4,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 8,
+      "facility": {
+        "id": "fac_0008",
+        "name": "SafeMD Future API Facility 008",
+        "type": "hospital",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 30.8,
+        "trust_0_100": 47.3,
+        "safety_0_100": 77.8
+      },
+      "distance_km": 16.7,
+      "incident_open_count": 2,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 9,
+      "facility": {
+        "id": "fac_0009",
+        "name": "SafeMD Future API Facility 009",
+        "type": "healthCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 55.5,
+        "trust_0_100": 35.2,
+        "safety_0_100": 87.3
+      },
+      "distance_km": 13.0,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 10,
+      "facility": {
+        "id": "fac_0010",
+        "name": "SafeMD Future API Facility 010",
+        "type": "traumaCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 90.7,
+        "trust_0_100": 67.6,
+        "safety_0_100": 88.5
+      },
+      "distance_km": 51.5,
+      "incident_open_count": 3,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 11,
+      "facility": {
+        "id": "fac_0011",
+        "name": "SafeMD Future API Facility 011",
+        "type": "clinic",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 81.2,
+        "trust_0_100": 40.9,
+        "safety_0_100": 67.3
+      },
+      "distance_km": 41.0,
+      "incident_open_count": 7,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 12,
+      "facility": {
+        "id": "fac_0012",
+        "name": "SafeMD Future API Facility 012",
+        "type": "dentist",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 54.9,
+        "trust_0_100": 73.3,
+        "safety_0_100": 34.1
+      },
+      "distance_km": 31.5,
+      "incident_open_count": 10,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 13,
+      "facility": {
+        "id": "fac_0013",
+        "name": "SafeMD Future API Facility 013",
+        "type": "hospital",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 52.3,
+        "trust_0_100": 44.6,
+        "safety_0_100": 86.3
+      },
+      "distance_km": 30.9,
+      "incident_open_count": 6,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 14,
+      "facility": {
+        "id": "fac_0014",
+        "name": "SafeMD Future API Facility 014",
+        "type": "healthCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 70.7,
+        "trust_0_100": 73.7,
+        "safety_0_100": 74.0
+      },
+      "distance_km": 54.4,
+      "incident_open_count": 11,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 15,
+      "facility": {
+        "id": "fac_0015",
+        "name": "SafeMD Future API Facility 015",
+        "type": "traumaCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 40.4,
+        "trust_0_100": 63.2,
+        "safety_0_100": 46.5
+      },
+      "distance_km": 32.7,
+      "incident_open_count": 9,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 16,
+      "facility": {
+        "id": "fac_0016",
+        "name": "SafeMD Future API Facility 016",
+        "type": "clinic",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 96.8,
+        "trust_0_100": 48.8,
+        "safety_0_100": 76.4
+      },
+      "distance_km": 24.6,
+      "incident_open_count": 1,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 17,
+      "facility": {
+        "id": "fac_0017",
+        "name": "SafeMD Future API Facility 017",
+        "type": "dentist",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 90.3,
+        "trust_0_100": 77.4,
+        "safety_0_100": 39.1
+      },
+      "distance_km": 67.7,
+      "incident_open_count": 5,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 18,
+      "facility": {
+        "id": "fac_0018",
+        "name": "SafeMD Future API Facility 018",
+        "type": "hospital",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 92.4,
+        "trust_0_100": 71.5,
+        "safety_0_100": 40.0
+      },
+      "distance_km": 16.0,
+      "incident_open_count": 11,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 19,
+      "facility": {
+        "id": "fac_0019",
+        "name": "SafeMD Future API Facility 019",
+        "type": "healthCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 94.0,
+        "trust_0_100": 70.3,
+        "safety_0_100": 42.5
+      },
+      "distance_km": 70.8,
+      "incident_open_count": 11,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 20,
+      "facility": {
+        "id": "fac_0020",
+        "name": "SafeMD Future API Facility 020",
+        "type": "traumaCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 69.3,
+        "trust_0_100": 59.1,
+        "safety_0_100": 58.4
+      },
+      "distance_km": 19.8,
+      "incident_open_count": 7,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 21,
+      "facility": {
+        "id": "fac_0021",
+        "name": "SafeMD Future API Facility 021",
+        "type": "clinic",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 32.6,
+        "trust_0_100": 91.1,
+        "safety_0_100": 62.3
+      },
+      "distance_km": 44.2,
+      "incident_open_count": 5,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 22,
+      "facility": {
+        "id": "fac_0022",
+        "name": "SafeMD Future API Facility 022",
+        "type": "dentist",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 81.8,
+        "trust_0_100": 36.6,
+        "safety_0_100": 55.7
+      },
+      "distance_km": 3.2,
+      "incident_open_count": 3,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 23,
+      "facility": {
+        "id": "fac_0023",
+        "name": "SafeMD Future API Facility 023",
+        "type": "hospital",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 38.5,
+        "trust_0_100": 96.9,
+        "safety_0_100": 75.4
+      },
+      "distance_km": 34.7,
+      "incident_open_count": 0,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 24,
+      "facility": {
+        "id": "fac_0024",
+        "name": "SafeMD Future API Facility 024",
+        "type": "healthCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 90.2,
+        "trust_0_100": 57.0,
+        "safety_0_100": 70.7
+      },
+      "distance_km": 54.9,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 25,
+      "facility": {
+        "id": "fac_0025",
+        "name": "SafeMD Future API Facility 025",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 54.5,
+        "trust_0_100": 68.2,
+        "safety_0_100": 82.8
+      },
+      "distance_km": 72.8,
+      "incident_open_count": 11,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 26,
+      "facility": {
+        "id": "fac_0026",
+        "name": "SafeMD Future API Facility 026",
+        "type": "clinic",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 94.4,
+        "trust_0_100": 35.3,
+        "safety_0_100": 82.0
+      },
+      "distance_km": 65.0,
+      "incident_open_count": 1,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 27,
+      "facility": {
+        "id": "fac_0027",
+        "name": "SafeMD Future API Facility 027",
+        "type": "dentist",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 39.4,
+        "trust_0_100": 61.8,
+        "safety_0_100": 86.3
+      },
+      "distance_km": 1.9,
+      "incident_open_count": 10,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 28,
+      "facility": {
+        "id": "fac_0028",
+        "name": "SafeMD Future API Facility 028",
+        "type": "hospital",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 84.7,
+        "trust_0_100": 67.8,
+        "safety_0_100": 80.1
+      },
+      "distance_km": 18.7,
+      "incident_open_count": 7,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 29,
+      "facility": {
+        "id": "fac_0029",
+        "name": "SafeMD Future API Facility 029",
+        "type": "healthCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 43.7,
+        "trust_0_100": 58.2,
+        "safety_0_100": 42.4
+      },
+      "distance_km": 28.2,
+      "incident_open_count": 3,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 30,
+      "facility": {
+        "id": "fac_0030",
+        "name": "SafeMD Future API Facility 030",
+        "type": "traumaCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 69.6,
+        "trust_0_100": 56.8,
+        "safety_0_100": 48.7
+      },
+      "distance_km": 76.2,
+      "incident_open_count": 11,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 31,
+      "facility": {
+        "id": "fac_0031",
+        "name": "SafeMD Future API Facility 031",
+        "type": "clinic",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 60.7,
+        "trust_0_100": 97.7,
+        "safety_0_100": 65.6
+      },
+      "distance_km": 42.1,
+      "incident_open_count": 10,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 32,
+      "facility": {
+        "id": "fac_0032",
+        "name": "SafeMD Future API Facility 032",
+        "type": "dentist",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 81.3,
+        "trust_0_100": 72.2,
+        "safety_0_100": 59.4
+      },
+      "distance_km": 70.4,
+      "incident_open_count": 10,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 33,
+      "facility": {
+        "id": "fac_0033",
+        "name": "SafeMD Future API Facility 033",
+        "type": "hospital",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 58.4,
+        "trust_0_100": 94.1,
+        "safety_0_100": 34.7
+      },
+      "distance_km": 34.9,
+      "incident_open_count": 1,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 34,
+      "facility": {
+        "id": "fac_0034",
+        "name": "SafeMD Future API Facility 034",
+        "type": "healthCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 95.6,
+        "trust_0_100": 51.1,
+        "safety_0_100": 85.6
+      },
+      "distance_km": 54.4,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 35,
+      "facility": {
+        "id": "fac_0035",
+        "name": "SafeMD Future API Facility 035",
+        "type": "traumaCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 79.5,
+        "trust_0_100": 75.3,
+        "safety_0_100": 97.0
+      },
+      "distance_km": 27.1,
+      "incident_open_count": 7,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 36,
+      "facility": {
+        "id": "fac_0036",
+        "name": "SafeMD Future API Facility 036",
+        "type": "clinic",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 44.0,
+        "trust_0_100": 38.2,
+        "safety_0_100": 44.7
+      },
+      "distance_km": 73.3,
+      "incident_open_count": 4,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 37,
+      "facility": {
+        "id": "fac_0037",
+        "name": "SafeMD Future API Facility 037",
+        "type": "dentist",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 88.0,
+        "trust_0_100": 42.2,
+        "safety_0_100": 71.7
+      },
+      "distance_km": 38.8,
+      "incident_open_count": 2,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 38,
+      "facility": {
+        "id": "fac_0038",
+        "name": "SafeMD Future API Facility 038",
+        "type": "hospital",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 75.5,
+        "trust_0_100": 54.6,
+        "safety_0_100": 96.3
+      },
+      "distance_km": 37.7,
+      "incident_open_count": 7,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 39,
+      "facility": {
+        "id": "fac_0039",
+        "name": "SafeMD Future API Facility 039",
+        "type": "healthCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 73.3,
+        "trust_0_100": 75.7,
+        "safety_0_100": 42.7
+      },
+      "distance_km": 5.7,
+      "incident_open_count": 8,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 40,
+      "facility": {
+        "id": "fac_0040",
+        "name": "SafeMD Future API Facility 040",
+        "type": "traumaCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.7,
+        "trust_0_100": 87.2,
+        "safety_0_100": 80.4
+      },
+      "distance_km": 9.8,
+      "incident_open_count": 4,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 41,
+      "facility": {
+        "id": "fac_0041",
+        "name": "SafeMD Future API Facility 041",
+        "type": "clinic",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 93.0,
+        "trust_0_100": 86.3,
+        "safety_0_100": 90.6
+      },
+      "distance_km": 42.2,
+      "incident_open_count": 9,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 42,
+      "facility": {
+        "id": "fac_0042",
+        "name": "SafeMD Future API Facility 042",
+        "type": "dentist",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 33.2,
+        "trust_0_100": 36.9,
+        "safety_0_100": 31.4
+      },
+      "distance_km": 20.8,
+      "incident_open_count": 10,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 43,
+      "facility": {
+        "id": "fac_0043",
+        "name": "SafeMD Future API Facility 043",
+        "type": "hospital",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 47.2,
+        "trust_0_100": 47.0,
+        "safety_0_100": 69.1
+      },
+      "distance_km": 3.9,
+      "incident_open_count": 3,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 44,
+      "facility": {
+        "id": "fac_0044",
+        "name": "SafeMD Future API Facility 044",
+        "type": "healthCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 41.5,
+        "trust_0_100": 78.4,
+        "safety_0_100": 31.5
+      },
+      "distance_km": 25.4,
+      "incident_open_count": 7,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 45,
+      "facility": {
+        "id": "fac_0045",
+        "name": "SafeMD Future API Facility 045",
+        "type": "traumaCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 94.7,
+        "trust_0_100": 69.5,
+        "safety_0_100": 86.0
+      },
+      "distance_km": 52.9,
+      "incident_open_count": 2,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 46,
+      "facility": {
+        "id": "fac_0046",
+        "name": "SafeMD Future API Facility 046",
+        "type": "clinic",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 43.2,
+        "trust_0_100": 71.8,
+        "safety_0_100": 32.7
+      },
+      "distance_km": 64.3,
+      "incident_open_count": 7,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 47,
+      "facility": {
+        "id": "fac_0047",
+        "name": "SafeMD Future API Facility 047",
+        "type": "dentist",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 96.2,
+        "trust_0_100": 89.7,
+        "safety_0_100": 33.5
+      },
+      "distance_km": 27.6,
+      "incident_open_count": 10,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 48,
+      "facility": {
+        "id": "fac_0048",
+        "name": "SafeMD Future API Facility 048",
+        "type": "hospital",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 37.8,
+        "trust_0_100": 75.1,
+        "safety_0_100": 85.0
+      },
+      "distance_km": 25.6,
+      "incident_open_count": 3,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 49,
+      "facility": {
+        "id": "fac_0049",
+        "name": "SafeMD Future API Facility 049",
+        "type": "healthCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 89.5,
+        "trust_0_100": 86.0,
+        "safety_0_100": 38.9
+      },
+      "distance_km": 61.5,
+      "incident_open_count": 9,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 50,
+      "facility": {
+        "id": "fac_0050",
+        "name": "SafeMD Future API Facility 050",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 43.6,
+        "trust_0_100": 71.7,
+        "safety_0_100": 74.1
+      },
+      "distance_km": 49.1,
+      "incident_open_count": 10,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 51,
+      "facility": {
+        "id": "fac_0051",
+        "name": "SafeMD Future API Facility 051",
+        "type": "clinic",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 36.6,
+        "trust_0_100": 77.3,
+        "safety_0_100": 73.6
+      },
+      "distance_km": 66.1,
+      "incident_open_count": 8,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 52,
+      "facility": {
+        "id": "fac_0052",
+        "name": "SafeMD Future API Facility 052",
+        "type": "dentist",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 52.6,
+        "trust_0_100": 81.2,
+        "safety_0_100": 89.8
+      },
+      "distance_km": 71.5,
+      "incident_open_count": 9,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 53,
+      "facility": {
+        "id": "fac_0053",
+        "name": "SafeMD Future API Facility 053",
+        "type": "hospital",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 41.1,
+        "trust_0_100": 36.7,
+        "safety_0_100": 74.9
+      },
+      "distance_km": 17.8,
+      "incident_open_count": 1,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 54,
+      "facility": {
+        "id": "fac_0054",
+        "name": "SafeMD Future API Facility 054",
+        "type": "healthCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 95.2,
+        "trust_0_100": 59.3,
+        "safety_0_100": 47.4
+      },
+      "distance_km": 37.0,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 55,
+      "facility": {
+        "id": "fac_0055",
+        "name": "SafeMD Future API Facility 055",
+        "type": "traumaCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 75.3,
+        "trust_0_100": 41.5,
+        "safety_0_100": 56.3
+      },
+      "distance_km": 11.4,
+      "incident_open_count": 2,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 56,
+      "facility": {
+        "id": "fac_0056",
+        "name": "SafeMD Future API Facility 056",
+        "type": "clinic",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 87.3,
+        "trust_0_100": 59.1,
+        "safety_0_100": 55.6
+      },
+      "distance_km": 43.5,
+      "incident_open_count": 7,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 57,
+      "facility": {
+        "id": "fac_0057",
+        "name": "SafeMD Future API Facility 057",
+        "type": "dentist",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 44.8,
+        "trust_0_100": 50.8,
+        "safety_0_100": 52.8
+      },
+      "distance_km": 37.0,
+      "incident_open_count": 7,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 58,
+      "facility": {
+        "id": "fac_0058",
+        "name": "SafeMD Future API Facility 058",
+        "type": "hospital",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 81.9,
+        "trust_0_100": 72.1,
+        "safety_0_100": 50.7
+      },
+      "distance_km": 6.9,
+      "incident_open_count": 0,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 59,
+      "facility": {
+        "id": "fac_0059",
+        "name": "SafeMD Future API Facility 059",
+        "type": "healthCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.7,
+        "trust_0_100": 43.4,
+        "safety_0_100": 39.2
+      },
+      "distance_km": 11.2,
+      "incident_open_count": 7,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 60,
+      "facility": {
+        "id": "fac_0060",
+        "name": "SafeMD Future API Facility 060",
+        "type": "traumaCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 92.5,
+        "trust_0_100": 52.2,
+        "safety_0_100": 51.1
+      },
+      "distance_km": 66.8,
+      "incident_open_count": 0,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 61,
+      "facility": {
+        "id": "fac_0061",
+        "name": "SafeMD Future API Facility 061",
+        "type": "clinic",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 72.8,
+        "trust_0_100": 47.0,
+        "safety_0_100": 60.0
+      },
+      "distance_km": 70.8,
+      "incident_open_count": 10,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 62,
+      "facility": {
+        "id": "fac_0062",
+        "name": "SafeMD Future API Facility 062",
+        "type": "dentist",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 79.1,
+        "trust_0_100": 41.2,
+        "safety_0_100": 80.2
+      },
+      "distance_km": 62.3,
+      "incident_open_count": 4,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 63,
+      "facility": {
+        "id": "fac_0063",
+        "name": "SafeMD Future API Facility 063",
+        "type": "hospital",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 87.0,
+        "trust_0_100": 78.1,
+        "safety_0_100": 55.6
+      },
+      "distance_km": 5.9,
+      "incident_open_count": 2,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 64,
+      "facility": {
+        "id": "fac_0064",
+        "name": "SafeMD Future API Facility 064",
+        "type": "healthCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.3,
+        "trust_0_100": 47.2,
+        "safety_0_100": 48.4
+      },
+      "distance_km": 43.3,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 65,
+      "facility": {
+        "id": "fac_0065",
+        "name": "SafeMD Future API Facility 065",
+        "type": "traumaCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 81.6,
+        "trust_0_100": 92.4,
+        "safety_0_100": 38.7
+      },
+      "distance_km": 15.4,
+      "incident_open_count": 0,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 66,
+      "facility": {
+        "id": "fac_0066",
+        "name": "SafeMD Future API Facility 066",
+        "type": "clinic",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 74.5,
+        "trust_0_100": 81.1,
+        "safety_0_100": 98.8
+      },
+      "distance_km": 75.2,
+      "incident_open_count": 9,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 67,
+      "facility": {
+        "id": "fac_0067",
+        "name": "SafeMD Future API Facility 067",
+        "type": "dentist",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 88.2,
+        "trust_0_100": 84.7,
+        "safety_0_100": 57.3
+      },
+      "distance_km": 51.6,
+      "incident_open_count": 2,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 68,
+      "facility": {
+        "id": "fac_0068",
+        "name": "SafeMD Future API Facility 068",
+        "type": "hospital",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.4,
+        "trust_0_100": 83.5,
+        "safety_0_100": 79.8
+      },
+      "distance_km": 36.0,
+      "incident_open_count": 2,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 69,
+      "facility": {
+        "id": "fac_0069",
+        "name": "SafeMD Future API Facility 069",
+        "type": "healthCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 56.1,
+        "trust_0_100": 61.9,
+        "safety_0_100": 32.3
+      },
+      "distance_km": 67.7,
+      "incident_open_count": 5,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 70,
+      "facility": {
+        "id": "fac_0070",
+        "name": "SafeMD Future API Facility 070",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 56.7,
+        "trust_0_100": 70.1,
+        "safety_0_100": 79.8
+      },
+      "distance_km": 31.0,
+      "incident_open_count": 6,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 71,
+      "facility": {
+        "id": "fac_0071",
+        "name": "SafeMD Future API Facility 071",
+        "type": "clinic",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 87.3,
+        "trust_0_100": 93.8,
+        "safety_0_100": 56.7
+      },
+      "distance_km": 11.7,
+      "incident_open_count": 0,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 72,
+      "facility": {
+        "id": "fac_0072",
+        "name": "SafeMD Future API Facility 072",
+        "type": "dentist",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 98.5,
+        "trust_0_100": 44.5,
+        "safety_0_100": 79.2
+      },
+      "distance_km": 66.2,
+      "incident_open_count": 9,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 73,
+      "facility": {
+        "id": "fac_0073",
+        "name": "SafeMD Future API Facility 073",
+        "type": "hospital",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 93.5,
+        "trust_0_100": 42.9,
+        "safety_0_100": 36.3
+      },
+      "distance_km": 79.0,
+      "incident_open_count": 1,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 74,
+      "facility": {
+        "id": "fac_0074",
+        "name": "SafeMD Future API Facility 074",
+        "type": "healthCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 42.2,
+        "trust_0_100": 71.8,
+        "safety_0_100": 60.8
+      },
+      "distance_km": 60.2,
+      "incident_open_count": 1,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 75,
+      "facility": {
+        "id": "fac_0075",
+        "name": "SafeMD Future API Facility 075",
+        "type": "traumaCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 43.1,
+        "trust_0_100": 93.5,
+        "safety_0_100": 45.0
+      },
+      "distance_km": 61.7,
+      "incident_open_count": 1,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 76,
+      "facility": {
+        "id": "fac_0076",
+        "name": "SafeMD Future API Facility 076",
+        "type": "clinic",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 62.7,
+        "trust_0_100": 37.1,
+        "safety_0_100": 51.7
+      },
+      "distance_km": 25.5,
+      "incident_open_count": 0,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 77,
+      "facility": {
+        "id": "fac_0077",
+        "name": "SafeMD Future API Facility 077",
+        "type": "dentist",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 79.7,
+        "trust_0_100": 64.1,
+        "safety_0_100": 33.9
+      },
+      "distance_km": 79.6,
+      "incident_open_count": 3,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 78,
+      "facility": {
+        "id": "fac_0078",
+        "name": "SafeMD Future API Facility 078",
+        "type": "hospital",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 93.2,
+        "trust_0_100": 50.8,
+        "safety_0_100": 57.2
+      },
+      "distance_km": 18.8,
+      "incident_open_count": 10,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 79,
+      "facility": {
+        "id": "fac_0079",
+        "name": "SafeMD Future API Facility 079",
+        "type": "healthCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 38.6,
+        "trust_0_100": 37.1,
+        "safety_0_100": 64.7
+      },
+      "distance_km": 10.6,
+      "incident_open_count": 2,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 80,
+      "facility": {
+        "id": "fac_0080",
+        "name": "SafeMD Future API Facility 080",
+        "type": "traumaCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 89.4,
+        "trust_0_100": 66.0,
+        "safety_0_100": 42.7
+      },
+      "distance_km": 53.9,
+      "incident_open_count": 2,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 81,
+      "facility": {
+        "id": "fac_0081",
+        "name": "SafeMD Future API Facility 081",
+        "type": "clinic",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 48.3,
+        "trust_0_100": 68.7,
+        "safety_0_100": 49.5
+      },
+      "distance_km": 41.7,
+      "incident_open_count": 8,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 82,
+      "facility": {
+        "id": "fac_0082",
+        "name": "SafeMD Future API Facility 082",
+        "type": "dentist",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 67.0,
+        "trust_0_100": 60.3,
+        "safety_0_100": 84.6
+      },
+      "distance_km": 70.0,
+      "incident_open_count": 7,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 83,
+      "facility": {
+        "id": "fac_0083",
+        "name": "SafeMD Future API Facility 083",
+        "type": "hospital",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 42.4,
+        "trust_0_100": 43.7,
+        "safety_0_100": 37.8
+      },
+      "distance_km": 78.4,
+      "incident_open_count": 11,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 84,
+      "facility": {
+        "id": "fac_0084",
+        "name": "SafeMD Future API Facility 084",
+        "type": "healthCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 45.9,
+        "trust_0_100": 97.1,
+        "safety_0_100": 44.3
+      },
+      "distance_km": 40.9,
+      "incident_open_count": 11,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 85,
+      "facility": {
+        "id": "fac_0085",
+        "name": "SafeMD Future API Facility 085",
+        "type": "traumaCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 64.3,
+        "trust_0_100": 93.6,
+        "safety_0_100": 32.8
+      },
+      "distance_km": 25.8,
+      "incident_open_count": 4,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 86,
+      "facility": {
+        "id": "fac_0086",
+        "name": "SafeMD Future API Facility 086",
+        "type": "clinic",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 34.6,
+        "trust_0_100": 50.1,
+        "safety_0_100": 62.1
+      },
+      "distance_km": 70.6,
+      "incident_open_count": 7,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 87,
+      "facility": {
+        "id": "fac_0087",
+        "name": "SafeMD Future API Facility 087",
+        "type": "dentist",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.5,
+        "trust_0_100": 88.1,
+        "safety_0_100": 82.5
+      },
+      "distance_km": 56.9,
+      "incident_open_count": 3,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 88,
+      "facility": {
+        "id": "fac_0088",
+        "name": "SafeMD Future API Facility 088",
+        "type": "hospital",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 77.0,
+        "trust_0_100": 82.1,
+        "safety_0_100": 50.8
+      },
+      "distance_km": 14.1,
+      "incident_open_count": 10,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 89,
+      "facility": {
+        "id": "fac_0089",
+        "name": "SafeMD Future API Facility 089",
+        "type": "healthCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.2,
+        "trust_0_100": 45.6,
+        "safety_0_100": 93.4
+      },
+      "distance_km": 48.1,
+      "incident_open_count": 11,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 90,
+      "facility": {
+        "id": "fac_0090",
+        "name": "SafeMD Future API Facility 090",
+        "type": "traumaCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 94.6,
+        "trust_0_100": 44.9,
+        "safety_0_100": 65.5
+      },
+      "distance_km": 8.1,
+      "incident_open_count": 3,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 91,
+      "facility": {
+        "id": "fac_0091",
+        "name": "SafeMD Future API Facility 091",
+        "type": "clinic",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 96.6,
+        "trust_0_100": 71.8,
+        "safety_0_100": 85.5
+      },
+      "distance_km": 23.1,
+      "incident_open_count": 7,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 92,
+      "facility": {
+        "id": "fac_0092",
+        "name": "SafeMD Future API Facility 092",
+        "type": "dentist",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 78.5,
+        "trust_0_100": 76.2,
+        "safety_0_100": 95.6
+      },
+      "distance_km": 35.1,
+      "incident_open_count": 9,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 93,
+      "facility": {
+        "id": "fac_0093",
+        "name": "SafeMD Future API Facility 093",
+        "type": "hospital",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 58.6,
+        "trust_0_100": 79.3,
+        "safety_0_100": 87.6
+      },
+      "distance_km": 27.3,
+      "incident_open_count": 5,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 94,
+      "facility": {
+        "id": "fac_0094",
+        "name": "SafeMD Future API Facility 094",
+        "type": "healthCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 44.4,
+        "trust_0_100": 70.3,
+        "safety_0_100": 83.1
+      },
+      "distance_km": 6.0,
+      "incident_open_count": 8,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 95,
+      "facility": {
+        "id": "fac_0095",
+        "name": "SafeMD Future API Facility 095",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 80.2,
+        "trust_0_100": 36.0,
+        "safety_0_100": 96.1
+      },
+      "distance_km": 37.9,
+      "incident_open_count": 5,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 96,
+      "facility": {
+        "id": "fac_0096",
+        "name": "SafeMD Future API Facility 096",
+        "type": "clinic",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 79.7,
+        "trust_0_100": 68.5,
+        "safety_0_100": 80.4
+      },
+      "distance_km": 7.5,
+      "incident_open_count": 4,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 97,
+      "facility": {
+        "id": "fac_0097",
+        "name": "SafeMD Future API Facility 097",
+        "type": "dentist",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 68.8,
+        "trust_0_100": 70.7,
+        "safety_0_100": 94.3
+      },
+      "distance_km": 3.9,
+      "incident_open_count": 10,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 98,
+      "facility": {
+        "id": "fac_0098",
+        "name": "SafeMD Future API Facility 098",
+        "type": "hospital",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 73.5,
+        "trust_0_100": 70.2,
+        "safety_0_100": 35.1
+      },
+      "distance_km": 47.8,
+      "incident_open_count": 5,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 99,
+      "facility": {
+        "id": "fac_0099",
+        "name": "SafeMD Future API Facility 099",
+        "type": "healthCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 45.3,
+        "trust_0_100": 47.5,
+        "safety_0_100": 90.6
+      },
+      "distance_km": 16.5,
+      "incident_open_count": 8,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 100,
+      "facility": {
+        "id": "fac_0100",
+        "name": "SafeMD Future API Facility 100",
+        "type": "traumaCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 81.8,
+        "trust_0_100": 80.3,
+        "safety_0_100": 68.2
+      },
+      "distance_km": 64.7,
+      "incident_open_count": 5,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 101,
+      "facility": {
+        "id": "fac_0101",
+        "name": "SafeMD Future API Facility 101",
+        "type": "clinic",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 62.1,
+        "trust_0_100": 74.7,
+        "safety_0_100": 86.5
+      },
+      "distance_km": 54.5,
+      "incident_open_count": 7,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 102,
+      "facility": {
+        "id": "fac_0102",
+        "name": "SafeMD Future API Facility 102",
+        "type": "dentist",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 58.0,
+        "trust_0_100": 70.7,
+        "safety_0_100": 57.3
+      },
+      "distance_km": 59.7,
+      "incident_open_count": 7,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 103,
+      "facility": {
+        "id": "fac_0103",
+        "name": "SafeMD Future API Facility 103",
+        "type": "hospital",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 56.2,
+        "trust_0_100": 64.9,
+        "safety_0_100": 82.1
+      },
+      "distance_km": 40.7,
+      "incident_open_count": 0,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 104,
+      "facility": {
+        "id": "fac_0104",
+        "name": "SafeMD Future API Facility 104",
+        "type": "healthCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 87.1,
+        "trust_0_100": 59.4,
+        "safety_0_100": 88.3
+      },
+      "distance_km": 63.0,
+      "incident_open_count": 4,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 105,
+      "facility": {
+        "id": "fac_0105",
+        "name": "SafeMD Future API Facility 105",
+        "type": "traumaCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 60.9,
+        "trust_0_100": 80.6,
+        "safety_0_100": 32.4
+      },
+      "distance_km": 31.7,
+      "incident_open_count": 10,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 106,
+      "facility": {
+        "id": "fac_0106",
+        "name": "SafeMD Future API Facility 106",
+        "type": "clinic",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 70.0,
+        "trust_0_100": 70.7,
+        "safety_0_100": 75.9
+      },
+      "distance_km": 54.5,
+      "incident_open_count": 10,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 107,
+      "facility": {
+        "id": "fac_0107",
+        "name": "SafeMD Future API Facility 107",
+        "type": "dentist",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 70.3,
+        "trust_0_100": 61.9,
+        "safety_0_100": 42.7
+      },
+      "distance_km": 24.0,
+      "incident_open_count": 7,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 108,
+      "facility": {
+        "id": "fac_0108",
+        "name": "SafeMD Future API Facility 108",
+        "type": "hospital",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 59.7,
+        "trust_0_100": 98.9,
+        "safety_0_100": 54.3
+      },
+      "distance_km": 36.2,
+      "incident_open_count": 3,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 109,
+      "facility": {
+        "id": "fac_0109",
+        "name": "SafeMD Future API Facility 109",
+        "type": "healthCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 55.6,
+        "trust_0_100": 72.2,
+        "safety_0_100": 95.4
+      },
+      "distance_km": 71.2,
+      "incident_open_count": 10,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 110,
+      "facility": {
+        "id": "fac_0110",
+        "name": "SafeMD Future API Facility 110",
+        "type": "traumaCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 48.4,
+        "trust_0_100": 91.6,
+        "safety_0_100": 64.1
+      },
+      "distance_km": 55.1,
+      "incident_open_count": 4,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 111,
+      "facility": {
+        "id": "fac_0111",
+        "name": "SafeMD Future API Facility 111",
+        "type": "clinic",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 35.1,
+        "trust_0_100": 90.5,
+        "safety_0_100": 51.6
+      },
+      "distance_km": 40.0,
+      "incident_open_count": 0,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 112,
+      "facility": {
+        "id": "fac_0112",
+        "name": "SafeMD Future API Facility 112",
+        "type": "dentist",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 59.0,
+        "trust_0_100": 88.0,
+        "safety_0_100": 87.1
+      },
+      "distance_km": 38.3,
+      "incident_open_count": 2,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 113,
+      "facility": {
+        "id": "fac_0113",
+        "name": "SafeMD Future API Facility 113",
+        "type": "hospital",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 83.0,
+        "trust_0_100": 64.3,
+        "safety_0_100": 55.8
+      },
+      "distance_km": 44.0,
+      "incident_open_count": 3,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 114,
+      "facility": {
+        "id": "fac_0114",
+        "name": "SafeMD Future API Facility 114",
+        "type": "healthCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 51.8,
+        "trust_0_100": 80.2,
+        "safety_0_100": 83.2
+      },
+      "distance_km": 5.3,
+      "incident_open_count": 2,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 115,
+      "facility": {
+        "id": "fac_0115",
+        "name": "SafeMD Future API Facility 115",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 80.6,
+        "trust_0_100": 87.3,
+        "safety_0_100": 60.7
+      },
+      "distance_km": 5.7,
+      "incident_open_count": 1,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 116,
+      "facility": {
+        "id": "fac_0116",
+        "name": "SafeMD Future API Facility 116",
+        "type": "clinic",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 47.0,
+        "trust_0_100": 76.2,
+        "safety_0_100": 56.0
+      },
+      "distance_km": 51.3,
+      "incident_open_count": 8,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 117,
+      "facility": {
+        "id": "fac_0117",
+        "name": "SafeMD Future API Facility 117",
+        "type": "dentist",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 47.8,
+        "trust_0_100": 65.5,
+        "safety_0_100": 66.2
+      },
+      "distance_km": 50.8,
+      "incident_open_count": 1,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 118,
+      "facility": {
+        "id": "fac_0118",
+        "name": "SafeMD Future API Facility 118",
+        "type": "hospital",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 96.4,
+        "trust_0_100": 53.5,
+        "safety_0_100": 51.1
+      },
+      "distance_km": 21.1,
+      "incident_open_count": 2,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 119,
+      "facility": {
+        "id": "fac_0119",
+        "name": "SafeMD Future API Facility 119",
+        "type": "healthCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 34.7,
+        "trust_0_100": 62.1,
+        "safety_0_100": 83.3
+      },
+      "distance_km": 57.0,
+      "incident_open_count": 9,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 120,
+      "facility": {
+        "id": "fac_0120",
+        "name": "SafeMD Future API Facility 120",
+        "type": "traumaCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 39.4,
+        "trust_0_100": 55.6,
+        "safety_0_100": 83.0
+      },
+      "distance_km": 39.5,
+      "incident_open_count": 2,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 121,
+      "facility": {
+        "id": "fac_0121",
+        "name": "SafeMD Future API Facility 121",
+        "type": "clinic",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 93.7,
+        "trust_0_100": 77.0,
+        "safety_0_100": 72.8
+      },
+      "distance_km": 61.6,
+      "incident_open_count": 4,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 122,
+      "facility": {
+        "id": "fac_0122",
+        "name": "SafeMD Future API Facility 122",
+        "type": "dentist",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 53.7,
+        "trust_0_100": 51.4,
+        "safety_0_100": 60.2
+      },
+      "distance_km": 39.5,
+      "incident_open_count": 9,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 123,
+      "facility": {
+        "id": "fac_0123",
+        "name": "SafeMD Future API Facility 123",
+        "type": "hospital",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 39.8,
+        "trust_0_100": 63.2,
+        "safety_0_100": 74.1
+      },
+      "distance_km": 11.5,
+      "incident_open_count": 9,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 124,
+      "facility": {
+        "id": "fac_0124",
+        "name": "SafeMD Future API Facility 124",
+        "type": "healthCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 42.0,
+        "trust_0_100": 53.1,
+        "safety_0_100": 96.4
+      },
+      "distance_km": 2.8,
+      "incident_open_count": 1,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 125,
+      "facility": {
+        "id": "fac_0125",
+        "name": "SafeMD Future API Facility 125",
+        "type": "traumaCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 42.7,
+        "trust_0_100": 45.6,
+        "safety_0_100": 62.7
+      },
+      "distance_km": 2.0,
+      "incident_open_count": 1,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 126,
+      "facility": {
+        "id": "fac_0126",
+        "name": "SafeMD Future API Facility 126",
+        "type": "clinic",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 41.2,
+        "trust_0_100": 52.3,
+        "safety_0_100": 84.7
+      },
+      "distance_km": 15.4,
+      "incident_open_count": 5,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 127,
+      "facility": {
+        "id": "fac_0127",
+        "name": "SafeMD Future API Facility 127",
+        "type": "dentist",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 72.6,
+        "trust_0_100": 61.0,
+        "safety_0_100": 58.8
+      },
+      "distance_km": 65.5,
+      "incident_open_count": 8,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 128,
+      "facility": {
+        "id": "fac_0128",
+        "name": "SafeMD Future API Facility 128",
+        "type": "hospital",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 93.7,
+        "trust_0_100": 92.2,
+        "safety_0_100": 76.1
+      },
+      "distance_km": 4.7,
+      "incident_open_count": 1,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 129,
+      "facility": {
+        "id": "fac_0129",
+        "name": "SafeMD Future API Facility 129",
+        "type": "healthCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 75.8,
+        "trust_0_100": 73.4,
+        "safety_0_100": 83.3
+      },
+      "distance_km": 17.7,
+      "incident_open_count": 1,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 130,
+      "facility": {
+        "id": "fac_0130",
+        "name": "SafeMD Future API Facility 130",
+        "type": "traumaCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 91.1,
+        "trust_0_100": 42.3,
+        "safety_0_100": 51.7
+      },
+      "distance_km": 3.4,
+      "incident_open_count": 11,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 131,
+      "facility": {
+        "id": "fac_0131",
+        "name": "SafeMD Future API Facility 131",
+        "type": "clinic",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 87.3,
+        "trust_0_100": 93.6,
+        "safety_0_100": 98.3
+      },
+      "distance_km": 49.3,
+      "incident_open_count": 9,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 132,
+      "facility": {
+        "id": "fac_0132",
+        "name": "SafeMD Future API Facility 132",
+        "type": "dentist",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 76.8,
+        "trust_0_100": 71.5,
+        "safety_0_100": 95.7
+      },
+      "distance_km": 48.9,
+      "incident_open_count": 7,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 133,
+      "facility": {
+        "id": "fac_0133",
+        "name": "SafeMD Future API Facility 133",
+        "type": "hospital",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 53.2,
+        "trust_0_100": 67.8,
+        "safety_0_100": 31.3
+      },
+      "distance_km": 58.2,
+      "incident_open_count": 3,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 134,
+      "facility": {
+        "id": "fac_0134",
+        "name": "SafeMD Future API Facility 134",
+        "type": "healthCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 59.1,
+        "trust_0_100": 89.5,
+        "safety_0_100": 82.1
+      },
+      "distance_km": 27.5,
+      "incident_open_count": 8,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 135,
+      "facility": {
+        "id": "fac_0135",
+        "name": "SafeMD Future API Facility 135",
+        "type": "traumaCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 35.3,
+        "trust_0_100": 43.5,
+        "safety_0_100": 42.7
+      },
+      "distance_km": 24.9,
+      "incident_open_count": 11,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 136,
+      "facility": {
+        "id": "fac_0136",
+        "name": "SafeMD Future API Facility 136",
+        "type": "clinic",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 94.0,
+        "trust_0_100": 52.8,
+        "safety_0_100": 92.0
+      },
+      "distance_km": 54.7,
+      "incident_open_count": 5,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 137,
+      "facility": {
+        "id": "fac_0137",
+        "name": "SafeMD Future API Facility 137",
+        "type": "dentist",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 88.9,
+        "trust_0_100": 60.8,
+        "safety_0_100": 30.2
+      },
+      "distance_km": 63.1,
+      "incident_open_count": 11,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 138,
+      "facility": {
+        "id": "fac_0138",
+        "name": "SafeMD Future API Facility 138",
+        "type": "hospital",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 39.8,
+        "trust_0_100": 86.2,
+        "safety_0_100": 77.4
+      },
+      "distance_km": 17.6,
+      "incident_open_count": 2,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 139,
+      "facility": {
+        "id": "fac_0139",
+        "name": "SafeMD Future API Facility 139",
+        "type": "healthCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 48.5,
+        "trust_0_100": 95.1,
+        "safety_0_100": 48.5
+      },
+      "distance_km": 56.4,
+      "incident_open_count": 5,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 140,
+      "facility": {
+        "id": "fac_0140",
+        "name": "SafeMD Future API Facility 140",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 86.2,
+        "trust_0_100": 42.5,
+        "safety_0_100": 65.6
+      },
+      "distance_km": 3.6,
+      "incident_open_count": 1,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 141,
+      "facility": {
+        "id": "fac_0141",
+        "name": "SafeMD Future API Facility 141",
+        "type": "clinic",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 68.0,
+        "trust_0_100": 89.2,
+        "safety_0_100": 35.8
+      },
+      "distance_km": 22.5,
+      "incident_open_count": 8,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 142,
+      "facility": {
+        "id": "fac_0142",
+        "name": "SafeMD Future API Facility 142",
+        "type": "dentist",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 72.0,
+        "trust_0_100": 55.0,
+        "safety_0_100": 73.4
+      },
+      "distance_km": 36.8,
+      "incident_open_count": 9,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 143,
+      "facility": {
+        "id": "fac_0143",
+        "name": "SafeMD Future API Facility 143",
+        "type": "hospital",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 89.5,
+        "trust_0_100": 53.7,
+        "safety_0_100": 82.3
+      },
+      "distance_km": 51.1,
+      "incident_open_count": 2,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 144,
+      "facility": {
+        "id": "fac_0144",
+        "name": "SafeMD Future API Facility 144",
+        "type": "healthCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 56.1,
+        "trust_0_100": 81.4,
+        "safety_0_100": 78.2
+      },
+      "distance_km": 31.5,
+      "incident_open_count": 8,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 145,
+      "facility": {
+        "id": "fac_0145",
+        "name": "SafeMD Future API Facility 145",
+        "type": "traumaCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 31.8,
+        "trust_0_100": 96.6,
+        "safety_0_100": 79.2
+      },
+      "distance_km": 17.0,
+      "incident_open_count": 10,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 146,
+      "facility": {
+        "id": "fac_0146",
+        "name": "SafeMD Future API Facility 146",
+        "type": "clinic",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 49.2,
+        "trust_0_100": 65.0,
+        "safety_0_100": 89.3
+      },
+      "distance_km": 36.3,
+      "incident_open_count": 8,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 147,
+      "facility": {
+        "id": "fac_0147",
+        "name": "SafeMD Future API Facility 147",
+        "type": "dentist",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 49.9,
+        "trust_0_100": 54.6,
+        "safety_0_100": 35.3
+      },
+      "distance_km": 18.2,
+      "incident_open_count": 7,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 148,
+      "facility": {
+        "id": "fac_0148",
+        "name": "SafeMD Future API Facility 148",
+        "type": "hospital",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 41.9,
+        "trust_0_100": 39.0,
+        "safety_0_100": 62.1
+      },
+      "distance_km": 17.8,
+      "incident_open_count": 3,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 149,
+      "facility": {
+        "id": "fac_0149",
+        "name": "SafeMD Future API Facility 149",
+        "type": "healthCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 81.0,
+        "trust_0_100": 94.0,
+        "safety_0_100": 48.8
+      },
+      "distance_km": 46.1,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 150,
+      "facility": {
+        "id": "fac_0150",
+        "name": "SafeMD Future API Facility 150",
+        "type": "traumaCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 35.2,
+        "trust_0_100": 43.0,
+        "safety_0_100": 91.0
+      },
+      "distance_km": 38.4,
+      "incident_open_count": 6,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 151,
+      "facility": {
+        "id": "fac_0151",
+        "name": "SafeMD Future API Facility 151",
+        "type": "clinic",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 85.5,
+        "trust_0_100": 39.3,
+        "safety_0_100": 71.0
+      },
+      "distance_km": 69.3,
+      "incident_open_count": 11,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 152,
+      "facility": {
+        "id": "fac_0152",
+        "name": "SafeMD Future API Facility 152",
+        "type": "dentist",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 30.4,
+        "trust_0_100": 68.4,
+        "safety_0_100": 55.5
+      },
+      "distance_km": 61.0,
+      "incident_open_count": 10,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 153,
+      "facility": {
+        "id": "fac_0153",
+        "name": "SafeMD Future API Facility 153",
+        "type": "hospital",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 35.1,
+        "trust_0_100": 52.0,
+        "safety_0_100": 86.1
+      },
+      "distance_km": 38.0,
+      "incident_open_count": 11,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 154,
+      "facility": {
+        "id": "fac_0154",
+        "name": "SafeMD Future API Facility 154",
+        "type": "healthCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 96.8,
+        "trust_0_100": 55.5,
+        "safety_0_100": 32.9
+      },
+      "distance_km": 31.9,
+      "incident_open_count": 5,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 155,
+      "facility": {
+        "id": "fac_0155",
+        "name": "SafeMD Future API Facility 155",
+        "type": "traumaCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 40.6,
+        "trust_0_100": 40.2,
+        "safety_0_100": 69.2
+      },
+      "distance_km": 76.3,
+      "incident_open_count": 6,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 156,
+      "facility": {
+        "id": "fac_0156",
+        "name": "SafeMD Future API Facility 156",
+        "type": "clinic",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 74.7,
+        "trust_0_100": 55.7,
+        "safety_0_100": 69.4
+      },
+      "distance_km": 60.4,
+      "incident_open_count": 6,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 157,
+      "facility": {
+        "id": "fac_0157",
+        "name": "SafeMD Future API Facility 157",
+        "type": "dentist",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 70.7,
+        "trust_0_100": 86.4,
+        "safety_0_100": 68.0
+      },
+      "distance_km": 16.5,
+      "incident_open_count": 5,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 158,
+      "facility": {
+        "id": "fac_0158",
+        "name": "SafeMD Future API Facility 158",
+        "type": "hospital",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 63.9,
+        "trust_0_100": 45.6,
+        "safety_0_100": 72.7
+      },
+      "distance_km": 65.5,
+      "incident_open_count": 6,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 159,
+      "facility": {
+        "id": "fac_0159",
+        "name": "SafeMD Future API Facility 159",
+        "type": "healthCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 39.3,
+        "trust_0_100": 69.9,
+        "safety_0_100": 80.6
+      },
+      "distance_km": 32.7,
+      "incident_open_count": 4,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 160,
+      "facility": {
+        "id": "fac_0160",
+        "name": "SafeMD Future API Facility 160",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 55.7,
+        "trust_0_100": 69.7,
+        "safety_0_100": 77.4
+      },
+      "distance_km": 45.1,
+      "incident_open_count": 3,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 161,
+      "facility": {
+        "id": "fac_0161",
+        "name": "SafeMD Future API Facility 161",
+        "type": "clinic",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 37.4,
+        "trust_0_100": 87.3,
+        "safety_0_100": 93.7
+      },
+      "distance_km": 8.8,
+      "incident_open_count": 4,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 162,
+      "facility": {
+        "id": "fac_0162",
+        "name": "SafeMD Future API Facility 162",
+        "type": "dentist",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 42.0,
+        "trust_0_100": 89.3,
+        "safety_0_100": 92.8
+      },
+      "distance_km": 4.3,
+      "incident_open_count": 2,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 163,
+      "facility": {
+        "id": "fac_0163",
+        "name": "SafeMD Future API Facility 163",
+        "type": "hospital",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 52.9,
+        "trust_0_100": 47.3,
+        "safety_0_100": 62.4
+      },
+      "distance_km": 73.8,
+      "incident_open_count": 11,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 164,
+      "facility": {
+        "id": "fac_0164",
+        "name": "SafeMD Future API Facility 164",
+        "type": "healthCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 41.8,
+        "trust_0_100": 66.2,
+        "safety_0_100": 66.2
+      },
+      "distance_km": 59.8,
+      "incident_open_count": 0,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 165,
+      "facility": {
+        "id": "fac_0165",
+        "name": "SafeMD Future API Facility 165",
+        "type": "traumaCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 60.2,
+        "trust_0_100": 44.0,
+        "safety_0_100": 54.4
+      },
+      "distance_km": 78.6,
+      "incident_open_count": 9,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 166,
+      "facility": {
+        "id": "fac_0166",
+        "name": "SafeMD Future API Facility 166",
+        "type": "clinic",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 38.0,
+        "trust_0_100": 86.7,
+        "safety_0_100": 51.5
+      },
+      "distance_km": 62.7,
+      "incident_open_count": 9,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 167,
+      "facility": {
+        "id": "fac_0167",
+        "name": "SafeMD Future API Facility 167",
+        "type": "dentist",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 30.9,
+        "trust_0_100": 90.8,
+        "safety_0_100": 41.2
+      },
+      "distance_km": 36.9,
+      "incident_open_count": 7,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 168,
+      "facility": {
+        "id": "fac_0168",
+        "name": "SafeMD Future API Facility 168",
+        "type": "hospital",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 65.0,
+        "trust_0_100": 45.6,
+        "safety_0_100": 39.6
+      },
+      "distance_km": 23.3,
+      "incident_open_count": 7,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 169,
+      "facility": {
+        "id": "fac_0169",
+        "name": "SafeMD Future API Facility 169",
+        "type": "healthCenter",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 33.6,
+        "trust_0_100": 48.9,
+        "safety_0_100": 39.0
+      },
+      "distance_km": 37.6,
+      "incident_open_count": 2,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 170,
+      "facility": {
+        "id": "fac_0170",
+        "name": "SafeMD Future API Facility 170",
+        "type": "traumaCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 70.5,
+        "trust_0_100": 53.0,
+        "safety_0_100": 32.3
+      },
+      "distance_km": 27.0,
+      "incident_open_count": 4,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 171,
+      "facility": {
+        "id": "fac_0171",
+        "name": "SafeMD Future API Facility 171",
+        "type": "clinic",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.1,
+        "trust_0_100": 51.4,
+        "safety_0_100": 57.9
+      },
+      "distance_km": 60.6,
+      "incident_open_count": 10,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 172,
+      "facility": {
+        "id": "fac_0172",
+        "name": "SafeMD Future API Facility 172",
+        "type": "dentist",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 91.2,
+        "trust_0_100": 93.8,
+        "safety_0_100": 51.4
+      },
+      "distance_km": 59.1,
+      "incident_open_count": 4,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 173,
+      "facility": {
+        "id": "fac_0173",
+        "name": "SafeMD Future API Facility 173",
+        "type": "hospital",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 47.5,
+        "trust_0_100": 43.9,
+        "safety_0_100": 60.2
+      },
+      "distance_km": 48.5,
+      "incident_open_count": 9,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 174,
+      "facility": {
+        "id": "fac_0174",
+        "name": "SafeMD Future API Facility 174",
+        "type": "healthCenter",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 40.1,
+        "trust_0_100": 80.6,
+        "safety_0_100": 62.8
+      },
+      "distance_km": 11.2,
+      "incident_open_count": 11,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 175,
+      "facility": {
+        "id": "fac_0175",
+        "name": "SafeMD Future API Facility 175",
+        "type": "traumaCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 97.1,
+        "trust_0_100": 79.5,
+        "safety_0_100": 38.9
+      },
+      "distance_km": 72.5,
+      "incident_open_count": 11,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 176,
+      "facility": {
+        "id": "fac_0176",
+        "name": "SafeMD Future API Facility 176",
+        "type": "clinic",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 36.4,
+        "trust_0_100": 56.2,
+        "safety_0_100": 94.7
+      },
+      "distance_km": 3.4,
+      "incident_open_count": 1,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 177,
+      "facility": {
+        "id": "fac_0177",
+        "name": "SafeMD Future API Facility 177",
+        "type": "dentist",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 93.4,
+        "trust_0_100": 74.1,
+        "safety_0_100": 34.6
+      },
+      "distance_km": 45.8,
+      "incident_open_count": 11,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 178,
+      "facility": {
+        "id": "fac_0178",
+        "name": "SafeMD Future API Facility 178",
+        "type": "hospital",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 68.9,
+        "trust_0_100": 82.2,
+        "safety_0_100": 76.8
+      },
+      "distance_km": 79.8,
+      "incident_open_count": 5,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 179,
+      "facility": {
+        "id": "fac_0179",
+        "name": "SafeMD Future API Facility 179",
+        "type": "healthCenter",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 40.8,
+        "trust_0_100": 87.0,
+        "safety_0_100": 58.4
+      },
+      "distance_km": 62.8,
+      "incident_open_count": 8,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 180,
+      "facility": {
+        "id": "fac_0180",
+        "name": "SafeMD Future API Facility 180",
+        "type": "traumaCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 98.4,
+        "trust_0_100": 52.0,
+        "safety_0_100": 61.3
+      },
+      "distance_km": 75.5,
+      "incident_open_count": 10,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 181,
+      "facility": {
+        "id": "fac_0181",
+        "name": "SafeMD Future API Facility 181",
+        "type": "clinic",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 95.3,
+        "trust_0_100": 58.9,
+        "safety_0_100": 94.9
+      },
+      "distance_km": 32.9,
+      "incident_open_count": 8,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 182,
+      "facility": {
+        "id": "fac_0182",
+        "name": "SafeMD Future API Facility 182",
+        "type": "dentist",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.2,
+        "trust_0_100": 65.2,
+        "safety_0_100": 60.9
+      },
+      "distance_km": 31.4,
+      "incident_open_count": 4,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 183,
+      "facility": {
+        "id": "fac_0183",
+        "name": "SafeMD Future API Facility 183",
+        "type": "hospital",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 59.9,
+        "trust_0_100": 43.9,
+        "safety_0_100": 34.2
+      },
+      "distance_km": 60.5,
+      "incident_open_count": 0,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 184,
+      "facility": {
+        "id": "fac_0184",
+        "name": "SafeMD Future API Facility 184",
+        "type": "healthCenter",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 76.4,
+        "trust_0_100": 86.3,
+        "safety_0_100": 45.9
+      },
+      "distance_km": 19.3,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 185,
+      "facility": {
+        "id": "fac_0185",
+        "name": "SafeMD Future API Facility 185",
+        "type": "traumaCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 49.2,
+        "trust_0_100": 54.5,
+        "safety_0_100": 82.5
+      },
+      "distance_km": 30.4,
+      "incident_open_count": 5,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 186,
+      "facility": {
+        "id": "fac_0186",
+        "name": "SafeMD Future API Facility 186",
+        "type": "clinic",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 73.9,
+        "trust_0_100": 46.9,
+        "safety_0_100": 37.3
+      },
+      "distance_km": 56.0,
+      "incident_open_count": 3,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 187,
+      "facility": {
+        "id": "fac_0187",
+        "name": "SafeMD Future API Facility 187",
+        "type": "dentist",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 82.2,
+        "trust_0_100": 54.0,
+        "safety_0_100": 73.9
+      },
+      "distance_km": 3.5,
+      "incident_open_count": 8,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 188,
+      "facility": {
+        "id": "fac_0188",
+        "name": "SafeMD Future API Facility 188",
+        "type": "hospital",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 69.9,
+        "trust_0_100": 51.2,
+        "safety_0_100": 54.0
+      },
+      "distance_km": 49.1,
+      "incident_open_count": 4,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 189,
+      "facility": {
+        "id": "fac_0189",
+        "name": "SafeMD Future API Facility 189",
+        "type": "healthCenter",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 70.7,
+        "trust_0_100": 44.9,
+        "safety_0_100": 78.8
+      },
+      "distance_km": 7.1,
+      "incident_open_count": 6,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 190,
+      "facility": {
+        "id": "fac_0190",
+        "name": "SafeMD Future API Facility 190",
+        "type": "traumaCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 44.0,
+        "trust_0_100": 51.2,
+        "safety_0_100": 43.8
+      },
+      "distance_km": 79.3,
+      "incident_open_count": 11,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 191,
+      "facility": {
+        "id": "fac_0191",
+        "name": "SafeMD Future API Facility 191",
+        "type": "clinic",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 49.8,
+        "trust_0_100": 73.7,
+        "safety_0_100": 98.4
+      },
+      "distance_km": 76.0,
+      "incident_open_count": 9,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 192,
+      "facility": {
+        "id": "fac_0192",
+        "name": "SafeMD Future API Facility 192",
+        "type": "dentist",
+        "specialties": [
+          "Optometry",
+          "Oncology"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 66.0,
+        "trust_0_100": 73.5,
+        "safety_0_100": 78.5
+      },
+      "distance_km": 27.4,
+      "incident_open_count": 0,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 193,
+      "facility": {
+        "id": "fac_0193",
+        "name": "SafeMD Future API Facility 193",
+        "type": "hospital",
+        "specialties": [
+          "Sports Medicine",
+          "Dialysis"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 52.6,
+        "trust_0_100": 35.3,
+        "safety_0_100": 32.4
+      },
+      "distance_km": 44.4,
+      "incident_open_count": 1,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 194,
+      "facility": {
+        "id": "fac_0194",
+        "name": "SafeMD Future API Facility 194",
+        "type": "healthCenter",
+        "specialties": [
+          "Dental",
+          "Trauma"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 44.0,
+        "trust_0_100": 56.3,
+        "safety_0_100": 34.9
+      },
+      "distance_km": 3.2,
+      "incident_open_count": 0,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 195,
+      "facility": {
+        "id": "fac_0195",
+        "name": "SafeMD Future API Facility 195",
+        "type": "traumaCenter",
+        "specialties": [
+          "Oncology",
+          "Neonatal"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 94.0,
+        "trust_0_100": 62.9,
+        "safety_0_100": 44.1
+      },
+      "distance_km": 56.9,
+      "incident_open_count": 10,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    },
+    {
+      "rank": 196,
+      "facility": {
+        "id": "fac_0196",
+        "name": "SafeMD Future API Facility 196",
+        "type": "clinic",
+        "specialties": [
+          "Dialysis",
+          "Primary Care"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 46.9,
+        "trust_0_100": 96.5,
+        "safety_0_100": 91.9
+      },
+      "distance_km": 51.2,
+      "incident_open_count": 0,
+      "reasons": [
+        "High trust score and strong consistency signals",
+        "Close proximity to user postal zone"
+      ]
+    },
+    {
+      "rank": 197,
+      "facility": {
+        "id": "fac_0197",
+        "name": "SafeMD Future API Facility 197",
+        "type": "dentist",
+        "specialties": [
+          "Trauma",
+          "Emergency"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 36.4,
+        "trust_0_100": 55.4,
+        "safety_0_100": 31.9
+      },
+      "distance_km": 18.2,
+      "incident_open_count": 11,
+      "reasons": [
+        "Low active incident burden",
+        "Capability coverage matches requested condition"
+      ]
+    },
+    {
+      "rank": 198,
+      "facility": {
+        "id": "fac_0198",
+        "name": "SafeMD Future API Facility 198",
+        "type": "hospital",
+        "specialties": [
+          "Neonatal",
+          "Optometry"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 38.7,
+        "trust_0_100": 75.5,
+        "safety_0_100": 36.9
+      },
+      "distance_km": 13.1,
+      "incident_open_count": 0,
+      "reasons": [
+        "Close proximity to user postal zone",
+        "Good staffing stability indicators"
+      ]
+    },
+    {
+      "rank": 199,
+      "facility": {
+        "id": "fac_0199",
+        "name": "SafeMD Future API Facility 199",
+        "type": "healthCenter",
+        "specialties": [
+          "Primary Care",
+          "Sports Medicine"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 92.3,
+        "trust_0_100": 56.5,
+        "safety_0_100": 53.0
+      },
+      "distance_km": 7.7,
+      "incident_open_count": 7,
+      "reasons": [
+        "Capability coverage matches requested condition",
+        "High trust score and strong consistency signals"
+      ]
+    },
+    {
+      "rank": 200,
+      "facility": {
+        "id": "fac_0200",
+        "name": "SafeMD Future API Facility 200",
+        "type": "traumaCenter",
+        "specialties": [
+          "Emergency",
+          "Dental"
+        ]
+      },
+      "scores": {
+        "composite_0_100": 76.7,
+        "trust_0_100": 70.0,
+        "safety_0_100": 72.6
+      },
+      "distance_km": 8.8,
+      "incident_open_count": 9,
+      "reasons": [
+        "Good staffing stability indicators",
+        "Low active incident burden"
+      ]
+    }
+  ]
+}

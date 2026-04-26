@@ -25,6 +25,22 @@ This creates:
 - `ui/incidents.jsonl` (3,000 incident reports)
 - `ui/incident_analytics.json` (aggregate incident analysis summary)
 
+## 2.6) Generate dummy API contract files (ranking panel)
+
+Simple contract:
+
+```powershell
+python ui/generate_dummy_api_response.py
+```
+
+Future API-style contract:
+
+```powershell
+python ui/generate_dummy_api_response_v2.py
+```
+
+If both exist, the app prioritizes `ui/dummy_api_response_v2.json`.
+
 ## 3) What this UI includes
 
 - Trust/confidence filtering
