@@ -2,3 +2,9 @@ streamlit
 pandas
 plotly
 scikit-learn
+
+# SafeMD live pipeline (used by ui/app.py via pipeline/safemd_pipeline.py)
+python-dotenv
+mlflow
+databricks-vectorsearch
+sentence-transformers

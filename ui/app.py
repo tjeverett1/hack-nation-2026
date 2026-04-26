@@ -1,5 +1,6 @@
 import json
 import random
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -9,6 +10,18 @@ import plotly.graph_objects as go
 import streamlit as st
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(REPO_ROOT / ".env")
+except ImportError:
+    # python-dotenv is optional; if missing the user can export env vars instead.
+    pass
 
 
 st.set_page_config(page_title="SafeMD.ai", page_icon="🏥", layout="wide")
@@ -97,7 +110,16 @@ def to_df(rows: list[dict]) -> pd.DataFrame:
     )
     if "facility_type_id" not in df.columns:
         df["facility_type_id"] = "UNKNOWN"
-    df["facility_type_id"] = df["facility_type_id"].fillna("UNKNOWN").astype(str)
+    df["facility_type_id"] = (
+        df["facility_type_id"]
+        .fillna("UNKNOWN")
+        .astype(str)
+        .str.strip()
+        # The source data contains a misspelling ("farmacy") alongside the
+        # correct spelling ("pharmacy").  Collapse to a single canonical label
+        # so the filter dropdown, map, and charts treat them as one category.
+        .replace(to_replace=r"(?i)^farmacy$", value="pharmacy", regex=True)
+    )
     return df
 
 
@@ -920,25 +942,60 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
     col3.metric("Selected Scope: Critical", int((subset["severity"] == "critical").sum()))
     col4.metric("Global Open Incidents", int((incidents_df["status"] == "open").sum()))
 
-    st.markdown("**Overview of Trends + Suggested Actionables**")
-    top_types = subset["incident_type"].value_counts().head(3).to_dict()
-    top_subtypes = subset["incident_subtype"].fillna("").replace("", pd.NA).dropna().value_counts().head(3).to_dict()
-    placeholder = (
-        "Placeholder (agent call commented out): "
-        f"Top incident categories here are {list(top_types.keys())}. "
-        f"Most common subtype signals are {list(top_subtypes.keys()) if top_subtypes else ['insufficient subtype detail']}. "
-        "Suggested actions: 1) triage high/critical open incidents within 24h, "
-        "2) launch staffing/resource check for repeated subtype patterns, "
-        "3) assign owner and SLA for closures."
+    st.markdown("**Overview of Trends**")
+    severity_w = {"low": 1.0, "medium": 2.0, "high": 4.0, "critical": 8.0}
+    sev_series = subset["severity"].fillna("medium").astype(str).str.lower()
+    weighted_severity = float(sev_series.map(severity_w).fillna(2.0).sum())
+    type_counts_full = subset["incident_type"].value_counts()
+    subtype_counts_full = (
+        subset["incident_subtype"].fillna("").replace("", pd.NA).dropna().value_counts()
     )
-    st.text_area("Trend Summary", value=placeholder, height=120, disabled=True)
+    open_count = int((subset["status"] == "open").sum())
+    critical_count = int((sev_series == "critical").sum())
+    high_count = int((sev_series == "high").sum())
+    top_type = type_counts_full.index[0] if not type_counts_full.empty else "—"
+    top_subtype = subtype_counts_full.index[0] if not subtype_counts_full.empty else "—"
 
-    st.markdown("**Incident Type Distribution**")
-    st.bar_chart(subset["incident_type"].value_counts())
-    st.markdown("**Subtype Distribution**")
-    subtype_counts = subset["incident_subtype"].fillna("").replace("", pd.NA).dropna().value_counts().head(12)
-    if not subtype_counts.empty:
-        st.bar_chart(subtype_counts)
+    snap_a, snap_b, snap_c = st.columns(3)
+    snap_a.metric("Top incident type", top_type, f"{int(type_counts_full.iloc[0]) if not type_counts_full.empty else 0} reports")
+    snap_b.metric("Top subtype", top_subtype, f"{int(subtype_counts_full.iloc[0]) if not subtype_counts_full.empty else 0} reports")
+    snap_c.metric("Severity-weighted load", f"{weighted_severity:.1f}", f"{critical_count + high_count} high/critical")
+
+    if len(subset) < 5:
+        st.caption(
+            f"Only **{len(subset)}** incidents in scope — distribution charts below are real but sparse. "
+            "Generate the live A3 report at the bottom for a real LLM-driven narrative."
+        )
+
+    chart_a, chart_b = st.columns(2)
+    with chart_a:
+        st.markdown("**Incident Type Distribution**")
+        if type_counts_full.empty:
+            st.info("No type data yet.")
+        else:
+            st.bar_chart(type_counts_full, height=260)
+    with chart_b:
+        st.markdown("**Subtype Distribution (top 12)**")
+        if subtype_counts_full.empty:
+            st.info("No subtype data yet.")
+        else:
+            st.bar_chart(subtype_counts_full.head(12), height=260)
+
+    sev_breakdown = sev_series.value_counts()
+    status_breakdown = subset["status"].fillna("unknown").astype(str).value_counts()
+    sev_col, status_col = st.columns(2)
+    with sev_col:
+        st.markdown("**Severity Mix**")
+        if sev_breakdown.empty:
+            st.info("No severity data.")
+        else:
+            st.bar_chart(sev_breakdown, height=220)
+    with status_col:
+        st.markdown("**Status Mix**")
+        if status_breakdown.empty:
+            st.info("No status data.")
+        else:
+            st.bar_chart(status_breakdown, height=220)
 
     st.markdown("**Top Issue Clusters (model-derived, ~10 groups)**")
     clusters = infer_top_issue_clusters(subset, n_clusters=10)
@@ -946,6 +1003,51 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
         st.dataframe(clusters, use_container_width=True)
     else:
         st.info("Not enough text to cluster incident issues yet.")
+
+    st.markdown("---")
+    st.markdown("### Live A3 / DMAIC Report (SafeMD pipeline)")
+    if selected_label == "All Hospitals":
+        st.info(
+            "Live DMAIC reports are generated per-facility. "
+            "Choose a specific hospital from the selector above to enable this section."
+        )
+    else:
+        st.caption(
+            f"Triages each incident with **Llama 3.3 70B** on Databricks Foundation Models, then synthesises a "
+            f"Lean-compliant A3 report (Define → Measure → Analyze → Improve → Control) tailored to "
+            f"**{facility_name}**. Uses the most recent 25 incidents."
+        )
+        cache_key = f"dmaic_report::{facility_id}"
+        action_col, regen_col, _ = st.columns([1.3, 0.8, 4])
+        with action_col:
+            run_clicked = st.button(
+                f"Generate A3 / DMAIC report",
+                type="primary",
+                disabled=subset.empty,
+                key=f"dmaic_run::{facility_id}",
+            )
+        with regen_col:
+            regen_clicked = st.button(
+                "Regenerate",
+                disabled=cache_key not in st.session_state,
+                key=f"dmaic_regen::{facility_id}",
+            )
+        if run_clicked or regen_clicked:
+            with st.spinner(
+                f"Triaging {min(len(subset), 25)} incidents and synthesising the A3 report..."
+            ):
+                report = run_live_dmaic_report(facility_name, subset)
+            if report:
+                st.session_state[cache_key] = report
+        if cache_key in st.session_state:
+            st.markdown(st.session_state[cache_key])
+            st.download_button(
+                "Download report (markdown)",
+                data=st.session_state[cache_key],
+                file_name=f"a3_report_{facility_name.replace(' ', '_')}.md",
+                mime="text/markdown",
+                key=f"dmaic_dl::{facility_id}",
+            )
 
     st.markdown("**Recent Incident Log**")
     view_cols = [
@@ -958,6 +1060,138 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
         "description",
     ]
     st.dataframe(subset.sort_values("timestamp_utc", ascending=False)[view_cols], use_container_width=True)
+
+
+@st.cache_resource(show_spinner="Booting SafeMD pipeline (loading embedding model + Databricks clients)...")
+def get_safemd_pipeline():
+    """Lazy-instantiate the portable RAG pipeline.
+
+    Cached as a Streamlit resource so the SentenceTransformer is only
+    downloaded / loaded once per session.  Returns None if env vars
+    are missing or any dependency fails to import - the UI will fall
+    back to the bundled dummy contract in that case.
+    """
+    try:
+        from pipeline import SafeMDPipeline
+    except Exception as exc:
+        st.warning(
+            "SafeMD pipeline import failed; live ranking disabled. "
+            f"Install ui/requirements.txt and restart. Detail: {exc}"
+        )
+        return None
+    try:
+        return SafeMDPipeline()
+    except Exception as exc:
+        st.warning(
+            "SafeMD pipeline initialisation failed; live ranking disabled. "
+            f"Check `.env` (DATABRICKS_HOST, DATABRICKS_TOKEN). Detail: {exc}"
+        )
+        return None
+
+
+def run_live_ranking(patient_need: str, postal_code: str) -> dict | None:
+    """Call SafeMDPipeline.rank_regional_facilities and return the raw payload."""
+    pipeline = get_safemd_pipeline()
+    if pipeline is None:
+        return None
+    try:
+        return pipeline.rank_regional_facilities(postal_code or "", patient_need)
+    except Exception as exc:
+        st.error(f"Live ranking call failed: {exc}")
+        return None
+
+
+def _incidents_to_pipeline_payload(subset: pd.DataFrame, max_incidents: int = 25) -> list[dict]:
+    """Convert the UI's incidents DataFrame into the list[dict] format Agent 3 expects.
+
+    The pipeline json.dumps each item before passing it to the triage LLM, so we
+    keep the field names short and human-readable (the LLM handles either form,
+    but compact keys reduce token spend).
+    """
+    if subset.empty:
+        return []
+    df = subset.copy()
+    if "timestamp_utc" in df.columns:
+        df = df.sort_values("timestamp_utc", ascending=False)
+    df = df.head(max_incidents)
+    payload: list[dict] = []
+    for _, r in df.iterrows():
+        payload.append(
+            {
+                "incident_id": r.get("incident_id"),
+                "timestamp": str(r.get("timestamp_utc")) if r.get("timestamp_utc") is not None else None,
+                "scope": r.get("incident_scope"),
+                "type": r.get("incident_type"),
+                "subtype": r.get("incident_subtype"),
+                "severity": r.get("severity"),
+                "status": r.get("status"),
+                "description": r.get("description"),
+            }
+        )
+    return payload
+
+
+def run_live_dmaic_report(facility_name: str, subset: pd.DataFrame, max_incidents: int = 25) -> str | None:
+    """Call SafeMDPipeline.generate_dmaic_analysis for one facility and return markdown."""
+    pipeline = get_safemd_pipeline()
+    if pipeline is None:
+        return None
+    incidents = _incidents_to_pipeline_payload(subset, max_incidents=max_incidents)
+    if not incidents:
+        return "No incidents available to analyze for this facility."
+    try:
+        return pipeline.generate_dmaic_analysis(facility_name, incidents)
+    except Exception as exc:
+        st.error(f"Live DMAIC analysis failed: {exc}")
+        return None
+
+
+def pipeline_payload_to_df(payload: dict, all_df: pd.DataFrame) -> pd.DataFrame:
+    """Map the pipeline's `ranked_facilities` payload to the UI's display schema.
+
+    Schema returned matches `get_dummy_api_ranked_results`:
+        rank | place_name | specialty | score | facility_type_id | reasons
+    Extra columns (city, state, raw_text) are appended for context.
+    """
+    ranked = payload.get("ranked_facilities", []) if payload else []
+    if not ranked:
+        return pd.DataFrame(columns=["rank", "place_name", "specialty", "score"])
+
+    name_lookup: dict[str, dict] = {}
+    if not all_df.empty and "facility_name" in all_df.columns:
+        for _, row in all_df.iterrows():
+            name = str(row.get("facility_name") or "").strip().lower()
+            if name and name not in name_lookup:
+                name_lookup[name] = row.to_dict()
+
+    rows: list[dict] = []
+    for item in ranked:
+        facility = item.get("facility", {}) or {}
+        scores = item.get("scores", {}) or {}
+        reasons = item.get("reasons", []) or []
+        name = facility.get("name") or ""
+        match = name_lookup.get(name.strip().lower(), {})
+        specialties = facility.get("specialties") or []
+        specialty_str = ", ".join(specialties) if isinstance(specialties, list) else str(specialties)
+        rows.append(
+            {
+                "rank": item.get("rank"),
+                "place_name": name,
+                "specialty": specialty_str,
+                "score": scores.get("composite_0_100") or scores.get("score"),
+                "facility_type_id": match.get("facility_type_id") or facility.get("type") or "UNKNOWN",
+                "city": match.get("city"),
+                "state": match.get("state"),
+                "reasons": "; ".join(reasons) if isinstance(reasons, list) else str(reasons),
+                "raw_text": item.get("raw_text", ""),
+            }
+        )
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df["score"] = pd.to_numeric(df["score"], errors="coerce").fillna(0.0)
+        df = df.sort_values("score", ascending=False).reset_index(drop=True)
+        df["rank"] = df.index + 1
+    return df
 
 
 def main():
@@ -1010,23 +1244,65 @@ def main():
             st.write(f"Showing {len(filtered_df):,} of {len(df):,} facilities")
             render_map(filtered_df, incidents_df)
 
-            st.markdown("#### Ranked Facilities (Dummy API Output, Top 200)")
-            api_df = get_dummy_api_ranked_results(selected_type, n=200)
-            if patient_need.strip():
-                need = patient_need.lower().strip()
-                narrowed = api_df[
-                    api_df["specialty"].astype(str).str.lower().str.contains(need, regex=False)
-                    | api_df["place_name"].astype(str).str.lower().str.contains(need, regex=False)
-                ]
-                if not narrowed.empty:
-                    api_df = narrowed
-            display_cols = ["rank", "place_name", "specialty", "score"]
-            st.dataframe(
-                api_df[display_cols].sort_values("rank"),
-                use_container_width=True,
-                height=360,
-                hide_index=True,
-            )
+            run_col, _ = st.columns([1, 5])
+            with run_col:
+                run_clicked = st.button(
+                    "Run live ranking via SafeMD pipeline",
+                    type="primary",
+                    disabled=not patient_need.strip(),
+                    help="Calls Databricks Vector Search + Llama 3.3 70B with the entered patient need and postal code.",
+                )
+
+            if run_clicked:
+                with st.spinner("Embedding query, retrieving regional facilities, and ranking..."):
+                    payload = run_live_ranking(patient_need.strip(), map_zip.strip())
+                st.session_state["live_ranking_payload"] = payload
+                st.session_state["live_ranking_query"] = {
+                    "patient_need": patient_need.strip(),
+                    "postal_code": map_zip.strip(),
+                }
+
+            live_payload = st.session_state.get("live_ranking_payload")
+            if live_payload and live_payload.get("ranked_facilities"):
+                meta = live_payload.get("metadata", {})
+                st.markdown("#### Ranked Facilities (live SafeMD pipeline)")
+                st.caption(
+                    f"Patient need: **{meta.get('patient_need','-')}**  •  "
+                    f"ZIP: **{meta.get('user_zip','-')}**  •  "
+                    f"Index: `{meta.get('vector_index','-')}`  •  "
+                    f"Model: `{meta.get('model','-')}`"
+                )
+                live_df = pipeline_payload_to_df(live_payload, df)
+                display_cols = ["rank", "place_name", "specialty", "score", "facility_type_id", "reasons"]
+                shown_cols = [c for c in display_cols if c in live_df.columns]
+                st.dataframe(
+                    live_df[shown_cols].sort_values("rank"),
+                    use_container_width=True,
+                    height=360,
+                    hide_index=True,
+                )
+                with st.expander("Show pipeline raw payload"):
+                    st.json(live_payload)
+            else:
+                st.markdown("#### Ranked Facilities (Dummy API Output, Top 200)")
+                if not patient_need.strip():
+                    st.caption("Enter a Patient Need above and click *Run live ranking* to use the SafeMD pipeline.")
+                api_df = get_dummy_api_ranked_results(selected_type, n=200)
+                if patient_need.strip():
+                    need = patient_need.lower().strip()
+                    narrowed = api_df[
+                        api_df["specialty"].astype(str).str.lower().str.contains(need, regex=False)
+                        | api_df["place_name"].astype(str).str.lower().str.contains(need, regex=False)
+                    ]
+                    if not narrowed.empty:
+                        api_df = narrowed
+                display_cols = ["rank", "place_name", "specialty", "score"]
+                st.dataframe(
+                    api_df[display_cols].sort_values("rank"),
+                    use_container_width=True,
+                    height=360,
+                    hide_index=True,
+                )
 
             render_facility_detail(filtered_df)
         else:
