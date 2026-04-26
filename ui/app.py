@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import sys
 from datetime import datetime, timezone
@@ -15,13 +16,40 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+# Local dev: load `.env` from repo root if python-dotenv is installed.
 try:
     from dotenv import load_dotenv
 
     load_dotenv(REPO_ROOT / ".env")
 except ImportError:
-    # python-dotenv is optional; if missing the user can export env vars instead.
+    # python-dotenv is optional; users can export env vars in the shell instead.
     pass
+
+
+def _hydrate_env_from_st_secrets() -> None:
+    """Bridge Streamlit Cloud / hosted secrets into os.environ.
+
+    Hosted Streamlit (share.streamlit.io, Snowflake-in-Streamlit, Hugging Face
+    Spaces with a Streamlit template, etc.) does **not** read `.env` files;
+    secrets are exposed via `st.secrets`.  The pipeline SDK
+    (`mlflow.deployments`, `databricks-vectorsearch`) reads `os.environ`, so we
+    copy across any keys it needs.  Locally we only fill keys that are not
+    already populated by `.env`, so dev workflow stays unchanged.
+    """
+    for key in ("DATABRICKS_HOST", "DATABRICKS_TOKEN", "DATABRICKS_HTTP_PATH"):
+        if os.environ.get(key):
+            continue
+        try:
+            value = st.secrets.get(key)  # type: ignore[attr-defined]
+        except Exception:
+            # st.secrets raises StreamlitSecretNotFoundError when no
+            # secrets file or hosted secret store is configured.
+            value = None
+        if value:
+            os.environ[key] = str(value)
+
+
+_hydrate_env_from_st_secrets()
 
 
 st.set_page_config(page_title="SafeMD.ai", page_icon="🏥", layout="wide")
@@ -1063,28 +1091,47 @@ def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
 
 
 @st.cache_resource(show_spinner="Booting SafeMD pipeline (loading embedding model + Databricks clients)...")
-def get_safemd_pipeline():
-    """Lazy-instantiate the portable RAG pipeline.
+def _build_safemd_pipeline():
+    """Construct the portable RAG pipeline once per session.
 
-    Cached as a Streamlit resource so the SentenceTransformer is only
-    downloaded / loaded once per session.  Returns None if env vars
-    are missing or any dependency fails to import - the UI will fall
-    back to the bundled dummy contract in that case.
+    Raises on failure so Streamlit does NOT memoize a broken state.
+    The public entry point ``get_safemd_pipeline`` traps the exception
+    and clears the cache so the user can fix env vars and retry without
+    restarting the app.
+    """
+    from pipeline import SafeMDPipeline  # local import keeps cold start fast
+
+    return SafeMDPipeline()
+
+
+def get_safemd_pipeline():
+    """Lazy-instantiate the portable RAG pipeline; return ``None`` on error.
+
+    Loading is cached, but failures are *not* cached - each retry will
+    re-attempt construction so a corrected env var (or freshly-saved
+    Streamlit Cloud secret) takes effect on the next button click.
     """
     try:
-        from pipeline import SafeMDPipeline
-    except Exception as exc:
+        return _build_safemd_pipeline()
+    except ImportError as exc:
+        _build_safemd_pipeline.clear()
         st.warning(
             "SafeMD pipeline import failed; live ranking disabled. "
-            f"Install ui/requirements.txt and restart. Detail: {exc}"
+            f"Install `ui/requirements.txt` and restart. Detail: {exc}"
         )
         return None
-    try:
-        return SafeMDPipeline()
     except Exception as exc:
+        _build_safemd_pipeline.clear()
+        host_set = bool(os.environ.get("DATABRICKS_HOST"))
+        token_set = bool(os.environ.get("DATABRICKS_TOKEN"))
+        env_status = (
+            f"DATABRICKS_HOST set: {host_set} | DATABRICKS_TOKEN set: {token_set}. "
+        )
         st.warning(
             "SafeMD pipeline initialisation failed; live ranking disabled. "
-            f"Check `.env` (DATABRICKS_HOST, DATABRICKS_TOKEN). Detail: {exc}"
+            "On Streamlit Cloud add the secrets in **App settings → Secrets**; "
+            "locally use `.env` at repo root. "
+            f"{env_status}Detail: {exc}"
         )
         return None
 
