@@ -13,6 +13,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 st.set_page_config(page_title="SafeMD.ai", page_icon="🏥", layout="wide")
 
+# Live map → Facility Intelligence (selectbox) sync when a map point is selected.
+MAP_FOCUS_FACILITY_ID = "map_focus_facility_id"
+FACILITY_INTEL_SELECT_KEY = "live_map_facility_intel_pick"
+# Avoid re-queueing map focus on every rerun while Plotly keeps the same point selected.
+LIVE_MAP_LAST_APPLIED_FID = "_live_map_last_applied_selection_fid"
+
 # Extra horizontal space between tab triggers (Streamlit tabs are tight by default).
 TABS_SPACING_CSS = """
 <style>
@@ -84,6 +90,18 @@ def load_data(uploaded_file, fallback_path: Path) -> dict:
     return {"facility_results": [], "dmaic_summary": {}, "equity_summary": {}}
 
 
+def normalize_facility_type_id(value: object) -> str:
+    """Canonical facility_type labels (e.g. merge typo variants)."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return "UNKNOWN"
+    s = str(value).strip()
+    if not s:
+        return "UNKNOWN"
+    if s.lower() == "farmacy":
+        return "pharmacy"
+    return s
+
+
 def to_df(rows: list[dict]) -> pd.DataFrame:
     if not rows:
         return pd.DataFrame()
@@ -98,6 +116,7 @@ def to_df(rows: list[dict]) -> pd.DataFrame:
     if "facility_type_id" not in df.columns:
         df["facility_type_id"] = "UNKNOWN"
     df["facility_type_id"] = df["facility_type_id"].fillna("UNKNOWN").astype(str)
+    df["facility_type_id"] = df["facility_type_id"].map(normalize_facility_type_id)
     return df
 
 
@@ -320,6 +339,155 @@ def render_executive_map_plotly_with_placeholder_box(
     st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True, "displaylogo": False})
 
 
+def _plotly_point_as_dict(pt0) -> dict:
+    if pt0 is None:
+        return {}
+    if isinstance(pt0, dict):
+        return pt0
+    out = {}
+    for k in ("customdata", "point_index", "pointNumber", "curveNumber"):
+        if hasattr(pt0, k):
+            out[k] = getattr(pt0, k)
+    return out
+
+
+def _facility_id_from_plotly_map_event(event, plot_df: pd.DataFrame) -> int | None:
+    """Read facility_id from Streamlit Plotly selection (customdata or point_index)."""
+    if event is None:
+        return None
+    sel = getattr(event, "selection", None)
+    if sel is None and isinstance(event, dict):
+        sel = event.get("selection")
+    if sel is None:
+        return None
+    pts = getattr(sel, "points", None)
+    if pts is None and isinstance(sel, dict):
+        pts = sel.get("points")
+    if not pts:
+        return None
+    pt0 = pts[0] if isinstance(pts, (list, tuple)) else None
+    pt0 = _plotly_point_as_dict(pt0)
+    cd = pt0.get("customdata")
+    if cd is not None:
+        if isinstance(cd, (list, tuple)) and len(cd) > 0:
+            try:
+                return int(cd[0])
+            except (TypeError, ValueError):
+                pass
+        try:
+            return int(cd)
+        except (TypeError, ValueError):
+            pass
+    idx = pt0.get("point_index")
+    if idx is None:
+        idx = pt0.get("pointNumber")
+    if idx is not None:
+        ii = int(idx)
+        if 0 <= ii < len(plot_df):
+            return int(plot_df.iloc[ii]["facility_id"])
+    return None
+
+
+def render_live_ground_truth_facility_map_plotly(map_df: pd.DataFrame, incidents_df: pd.DataFrame) -> None:
+    """Plotly + OSM tiles; dot color scales with incident report volume at each facility."""
+    plot_df = map_df.copy()
+    plot_df["facility_id"] = pd.to_numeric(plot_df["facility_id"], errors="coerce")
+    plot_df = plot_df.dropna(subset=["facility_id"])
+    plot_df["facility_id"] = plot_df["facility_id"].astype(int)
+
+    if incidents_df.empty:
+        plot_df["incident_reports"] = 0
+        plot_df["incident_weighted"] = 0.0
+    else:
+        plot_df["incident_reports"] = plot_df["facility_id"].apply(
+            lambda fid: int((incidents_df["facility_id"] == int(fid)).sum())
+        )
+        plot_df["incident_weighted"] = plot_df["facility_id"].apply(
+            lambda fid: severity_weighted_incident_count_for_facility(incidents_df, int(fid))
+        )
+
+    plot_df["facility_name"] = plot_df.get("facility_name", pd.Series(dtype=object)).fillna("").astype(str)
+    plot_df["city"] = plot_df.get("city", pd.Series(dtype=object)).fillna("").astype(str)
+    plot_df["state"] = plot_df.get("state", pd.Series(dtype=object)).fillna("").astype(str)
+    plot_df["pincode"] = plot_df.get("pincode", pd.Series(dtype=object)).fillna("").astype(str)
+    plot_df["facility_type_id"] = plot_df.get("facility_type_id", pd.Series(dtype=object)).fillna("").astype(str)
+    plot_df["trust_score"] = pd.to_numeric(plot_df.get("trust_score"), errors="coerce")
+    plot_df["map_label"] = plot_df["facility_name"].astype(str).str.strip().replace("", "—")
+
+    mid_lat = float(plot_df["lat"].median())
+    mid_lon = float(plot_df["lon"].median())
+
+    z = plot_df["incident_reports"].astype(float)
+    min_v = float(z.min())
+    max_v = float(z.max())
+    if max_v <= min_v:
+        cmax = min_v + 1.0
+    else:
+        cmax = max_v
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scattermapbox(
+            mode="markers",
+            lon=plot_df["lon"],
+            lat=plot_df["lat"],
+            marker=dict(
+                size=9,
+                color=z,
+                colorscale=[
+                    [0.0, "rgb(56, 130, 210)"],
+                    [0.45, "rgb(120, 190, 210)"],
+                    [0.72, "rgb(235, 195, 80)"],
+                    [1.0, "rgb(220, 45, 35)"],
+                ],
+                cmin=min_v,
+                cmax=cmax,
+                colorbar=dict(title="Incident reports", tickformat=".0f"),
+                showscale=True,
+            ),
+            text=plot_df["map_label"],
+            customdata=np.expand_dims(plot_df["facility_id"].astype(int).values, axis=1),
+            hovertemplate="%{text}<extra></extra>",
+        )
+    )
+    fig.update_layout(
+        mapbox_style="open-street-map",
+        mapbox_zoom=4.2,
+        mapbox_center=dict(lat=mid_lat, lon=mid_lon),
+        margin=dict(l=0, r=48, t=0, b=0),
+        height=520,
+        showlegend=False,
+    )
+    plotly_kwargs = dict(use_container_width=True, config={"scrollZoom": True, "displaylogo": False})
+    try:
+        event = st.plotly_chart(
+            fig,
+            key="live_map_facilities",
+            on_select="rerun",
+            selection_mode="points",
+            **plotly_kwargs,
+        )
+    except TypeError:
+        event = None
+        st.plotly_chart(fig, **plotly_kwargs)
+
+    fid = _facility_id_from_plotly_map_event(event, plot_df)
+    if fid is not None and fid != st.session_state.get(LIVE_MAP_LAST_APPLIED_FID):
+        st.session_state[MAP_FOCUS_FACILITY_ID] = fid
+        st.session_state[LIVE_MAP_LAST_APPLIED_FID] = fid
+        mask = plot_df["facility_id"] == fid
+        name = str(plot_df.loc[mask, "map_label"].iloc[0]) if bool(mask.any()) else str(fid)
+        try:
+            st.toast(f"Opening: {name}")
+        except Exception:
+            pass
+
+    st.caption(
+        "Hover shows **facility name only**. **Click** a point to open it in Facility Intelligence below. "
+        "Cooler dots = fewer incident reports; warmer = more (see color bar)."
+    )
+
+
 def compute_desert_overlay_points(
     all_df: pd.DataFrame,
     selected_facility_type: str,
@@ -407,7 +575,7 @@ def get_dummy_api_ranked_results(selected_facility_type: str, n: int = 200) -> p
                         "place_name": facility.get("name"),
                         "specialty": ", ".join(facility.get("specialties", [])) if isinstance(facility.get("specialties"), list) else facility.get("specialties"),
                         "score": score_obj.get("score", score_obj.get("composite_0_100")),
-                        "facility_type_id": facility.get("type"),
+                        "facility_type_id": normalize_facility_type_id(facility.get("type")),
                         "distance_km": r.get("distance_km"),
                         "incident_open_count": r.get("incident_open_count"),
                         "reasons": "; ".join(r.get("reasons", [])) if isinstance(r.get("reasons"), list) else r.get("reasons"),
@@ -418,6 +586,8 @@ def get_dummy_api_ranked_results(selected_facility_type: str, n: int = 200) -> p
 
         df = pd.DataFrame(rows)
         if not df.empty:
+            if "facility_type_id" in df.columns:
+                df["facility_type_id"] = df["facility_type_id"].map(normalize_facility_type_id)
             if "facility_type_id" in df.columns and selected_facility_type != "All":
                 typed = df[df["facility_type_id"].astype(str) == str(selected_facility_type)].copy()
                 if not typed.empty:
@@ -584,7 +754,11 @@ def render_map(
     if map_df.empty:
         st.info("No geocoded coordinates in current selection.")
         return
-    st.map(map_df[["lat", "lon"]], zoom=4)
+    try:
+        render_live_ground_truth_facility_map_plotly(map_df, incidents_df)
+    except Exception as exc:
+        st.map(map_df[["lat", "lon"]], zoom=4)
+        st.caption(f"Plotly map unavailable ({exc!s}); using basic map. Install plotly: `pip install plotly`.")
 
 
 def render_dmaic(dmaic: dict, df: pd.DataFrame, incidents_df: pd.DataFrame):
@@ -737,6 +911,7 @@ def render_dmaic(dmaic: dict, df: pd.DataFrame, incidents_df: pd.DataFrame):
 
 
 def render_facility_detail(filtered_df: pd.DataFrame):
+    st.markdown('<span id="facility-intelligence"></span>', unsafe_allow_html=True)
     st.subheader("Facility Intelligence + Source Traceability")
     if filtered_df.empty:
         st.info("No facility selected.")
@@ -760,7 +935,31 @@ def render_facility_detail(filtered_df: pd.DataFrame):
         + ", "
         + match["state"].fillna("UNKNOWN")
     ).tolist()
-    selected_label = st.selectbox("Select Facility", options)
+
+    if MAP_FOCUS_FACILITY_ID in st.session_state:
+        try:
+            focus_fid = int(st.session_state.pop(MAP_FOCUS_FACILITY_ID))
+        except (TypeError, ValueError):
+            focus_fid = None
+        if focus_fid is not None:
+            hit = match[match["facility_id"] == focus_fid]
+            if not hit.empty:
+                lab = (
+                    hit["facility_name"].fillna("UNKNOWN").astype(str)
+                    + " | "
+                    + hit["city"].fillna("UNKNOWN").astype(str)
+                    + ", "
+                    + hit["state"].fillna("UNKNOWN").astype(str)
+                ).iloc[0]
+                if lab in options:
+                    st.session_state[FACILITY_INTEL_SELECT_KEY] = lab
+
+    if FACILITY_INTEL_SELECT_KEY in st.session_state:
+        cur = st.session_state.get(FACILITY_INTEL_SELECT_KEY)
+        if cur not in options:
+            del st.session_state[FACILITY_INTEL_SELECT_KEY]
+
+    selected_label = st.selectbox("Select Facility", options, key=FACILITY_INTEL_SELECT_KEY)
     row = match.reset_index(drop=True).iloc[options.index(selected_label)].to_dict()
 
     st.markdown(f"### {row.get('facility_name', 'UNKNOWN')}")
@@ -1009,8 +1208,9 @@ def main():
 
             st.write(f"Showing {len(filtered_df):,} of {len(df):,} facilities")
             render_map(filtered_df, incidents_df)
+            render_facility_detail(filtered_df)
 
-            st.markdown("#### Ranked Facilities (Dummy API Output, Top 200)")
+            st.markdown("#### Ranked Facilities (Top 200)")
             api_df = get_dummy_api_ranked_results(selected_type, n=200)
             if patient_need.strip():
                 need = patient_need.lower().strip()
@@ -1027,8 +1227,6 @@ def main():
                 height=360,
                 hide_index=True,
             )
-
-            render_facility_detail(filtered_df)
         else:
             st.info("No facility data loaded.")
 
