@@ -229,7 +229,7 @@ def parse_args() -> argparse.Namespace:
         choices=["local", "databricks"],
         help="local = no credentials required (mocked calls); databricks = real endpoint invocations",
     )
-    parser.add_argument("--max-records", type=int, default=200, help="Limit processed rows for faster local tests")
+    parser.add_argument("--max-records", type=int, default=1500, help="Limit processed rows for faster local tests")
     return parser.parse_args()
 
 
@@ -413,6 +413,7 @@ def build_ui_payload(
     return {
         "facility_id": record.row_id,
         "facility_name": record.name,
+        "facility_type_id": record.raw.get("facilityTypeId", "UNKNOWN"),
         "city": record.city,
         "state": record.state,
         "pincode": record.pincode,

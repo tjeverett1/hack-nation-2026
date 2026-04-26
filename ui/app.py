@@ -1,4 +1,5 @@
 import json
+import random
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -31,6 +32,9 @@ def to_df(rows: list[dict]) -> pd.DataFrame:
     df["has_anomaly"] = df.get("anomaly_flags", pd.Series(dtype=object)).apply(
         lambda x: len(x) > 0 if isinstance(x, list) else False
     )
+    if "facility_type_id" not in df.columns:
+        df["facility_type_id"] = "UNKNOWN"
+    df["facility_type_id"] = df["facility_type_id"].fillna("UNKNOWN").astype(str)
     return df
 
 
@@ -128,6 +132,58 @@ def infer_top_issue_clusters(incidents_df: pd.DataFrame, n_clusters: int = 10) -
     return pd.DataFrame(rows).sort_values("count", ascending=False).reset_index(drop=True)
 
 
+def write_incidents(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps(row) + "\n")
+
+
+def seed_sample_incidents(df: pd.DataFrame, n: int = 50) -> list[dict]:
+    if df.empty:
+        return []
+    random.seed(42)
+    scopes = ["Single Patient", "Single Department", "Whole Hospital", "Regional Network", "Supply Chain", "Staff Safety"]
+    types = [
+        "Unexpected Outcome",
+        "Insufficient Resources",
+        "Insufficient Staff",
+        "Equipment Failure",
+        "Infrastructure Failure",
+        "Near Miss",
+    ]
+    subtypes = [
+        "Power outage",
+        "Oxygen shortage",
+        "No anesthesiologist",
+        "Ventilator failure",
+        "Nurse shortage",
+        "Medication error",
+        "Dialysis down",
+        "Ambulance delay",
+    ]
+    severities = ["low", "medium", "high", "critical"]
+    statuses = ["open", "monitoring", "resolved"]
+    rows: list[dict] = []
+    for i in range(n):
+        r = df.sample(1, random_state=42 + i).iloc[0]
+        rows.append(
+            {
+                "incident_id": f"inc_seed_{i+1}",
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "facility_id": int(r["facility_id"]),
+                "facility_name": r["facility_name"],
+                "incident_scope": random.choice(scopes),
+                "incident_type": random.choice(types),
+                "incident_subtype": random.choice(subtypes),
+                "description": "Seeded incident for local map and analysis testing.",
+                "severity": random.choice(severities),
+                "status": random.choices(statuses, weights=[0.6, 0.2, 0.2], k=1)[0],
+            }
+        )
+    return rows
+
+
 def dashboard_metrics(df: pd.DataFrame, incidents_df: pd.DataFrame):
     if df.empty:
         st.info("No facility data loaded.")
@@ -149,26 +205,32 @@ def dashboard_metrics(df: pd.DataFrame, incidents_df: pd.DataFrame):
 
 
 def apply_filters(df: pd.DataFrame, incidents_df: pd.DataFrame) -> pd.DataFrame:
-    st.sidebar.header("Planner Filters")
-    trust_min = st.sidebar.slider("Verification Confidence (min)", 0, 100, 60)
-    urgent_only = st.sidebar.checkbox("Urgent Need Only", value=False)
-    one_resource_only = st.sidebar.checkbox("One Resource Away Only", value=False)
-    needs_review_only = st.sidebar.checkbox("Needs Human Review Only", value=False)
+    st.sidebar.header("Planning Filters")
+    trust_min = st.sidebar.slider("Minimum Verification Confidence", 0, 100, 60)
+    capability_gap_only = st.sidebar.checkbox("Show Capability Gap Risk Only", value=False)
+    one_intervention_only = st.sidebar.checkbox("Show 'One Intervention Away' Facilities", value=False)
+    audit_priority_only = st.sidebar.checkbox("Show Manual Audit Priority", value=False)
     state_filter = st.sidebar.multiselect(
-        "State",
+        "State/Region",
         sorted(df["state"].dropna().unique().tolist()) if "state" in df.columns else [],
     )
-    has_icu_gap = st.sidebar.checkbox("Flag ICU Supporting Infra Gaps", value=False)
-    has_open_incident = st.sidebar.checkbox("Open Incidents Only", value=False)
+    has_icu_gap = st.sidebar.checkbox("ICU Dependency Gap (no supporting infra evidence)", value=False)
+    has_open_incident = st.sidebar.checkbox("Active Incident Facilities Only", value=False)
     all_service_types = sorted({s for row in df["healthcare_types"] for s in (row or [])})
-    service_filter = st.sidebar.selectbox("Healthcare Service Type", ["All"] + all_service_types)
+    service_filter = st.sidebar.selectbox("Service Capability Category", ["All"] + all_service_types)
+
+    st.sidebar.caption(
+        "Capability Gap Risk = missing critical fields with reasonable confidence; "
+        "One Intervention Away = likely one missing resource to become functional; "
+        "Manual Audit Priority = validator flagged for human review."
+    )
 
     filtered = df[df["trust_score"].fillna(0) >= trust_min]
-    if urgent_only and "urgent_need" in filtered.columns:
+    if capability_gap_only and "urgent_need" in filtered.columns:
         filtered = filtered[filtered["urgent_need"] == True]  # noqa: E712
-    if one_resource_only and "one_resource_away" in filtered.columns:
+    if one_intervention_only and "one_resource_away" in filtered.columns:
         filtered = filtered[filtered["one_resource_away"] == True]  # noqa: E712
-    if needs_review_only and "needs_human_review" in filtered.columns:
+    if audit_priority_only and "needs_human_review" in filtered.columns:
         filtered = filtered[filtered["needs_human_review"] == True]  # noqa: E712
     if state_filter and "state" in filtered.columns:
         filtered = filtered[filtered["state"].isin(state_filter)]
@@ -206,7 +268,7 @@ def render_map(filtered_df: pd.DataFrame, incidents_df: pd.DataFrame):
         *map_df["facility_id"].apply(lambda x: incident_summary_for_facility(incidents_df, x))
     )
     map_df["has_power_outage"] = map_df["active_incident_subtypes"].apply(
-        lambda x: "Power Outage" in x if isinstance(x, list) else False
+        lambda x: any("power outage" in str(v).lower() for v in x) if isinstance(x, list) else False
     )
     map_df["marker_color"] = map_df.apply(
         lambda r: [255, 0, 0]
@@ -380,6 +442,18 @@ def render_incident_reporting_tab(df: pd.DataFrame, incidents_path: Path):
             f.write(json.dumps(payload) + "\n")
         st.success("Incident submitted. Live map and analysis update on refresh.")
 
+    st.markdown("#### Incident Dataset Controls")
+    c1, c2 = st.columns(2)
+    with c1:
+        if st.button("Clear All Incident Reports"):
+            write_incidents(incidents_path, [])
+            st.success("All incidents cleared.")
+    with c2:
+        if st.button("Seed Exactly 50 Incidents"):
+            rows = seed_sample_incidents(df, n=50)
+            write_incidents(incidents_path, rows)
+            st.success("Replaced incident dataset with exactly 50 seeded incidents.")
+
 
 def render_incident_analysis_tab(df: pd.DataFrame, incidents_df: pd.DataFrame):
     st.subheader("Incident Analysis")
@@ -469,6 +543,11 @@ def main():
     df = to_df(facility_rows)
     if not df.empty:
         df["healthcare_types"] = df.apply(lambda r: classify_healthcare_types(r.to_dict()), axis=1)
+        if len(df) < 1000:
+            st.warning(
+                "Current facility dataset has fewer than 1000 records. "
+                "For full-scale demo, regenerate `databricks_agent_output.json` with a higher `--max-records` value."
+            )
     dashboard_metrics(df, incidents_df)
 
     tab_map, tab_report, tab_analysis, tab_dashboard = st.tabs(
@@ -478,6 +557,10 @@ def main():
     with tab_map:
         if not df.empty:
             filtered_df = apply_filters(df, incidents_df)
+            facility_types = sorted(filtered_df["facility_type_id"].dropna().unique().tolist())
+            selected_type = st.selectbox("Facility Type (facilityTypeId)", ["All"] + facility_types)
+            if selected_type != "All":
+                filtered_df = filtered_df[filtered_df["facility_type_id"] == selected_type]
             st.write(f"Showing {len(filtered_df):,} of {len(df):,} facilities")
             render_map(filtered_df, incidents_df)
             render_facility_detail(filtered_df)
