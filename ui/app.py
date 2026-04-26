@@ -281,7 +281,11 @@ def render_map(filtered_df: pd.DataFrame, incidents_df: pd.DataFrame):
         "ScatterplotLayer",
         data=map_df,
         get_position="[lon, lat]",
-        get_radius=7000,
+        # Pixel-based radii prevent oversized circles at high zoom.
+        get_radius=8,
+        radius_units="pixels",
+        radius_min_pixels=2,
+        radius_max_pixels=14,
         get_fill_color="marker_color",
         pickable=True,
     )
